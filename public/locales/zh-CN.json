@@ -1,25 +1,10 @@
 {
-  "common": {
-    "home": "首页",
-    "about": "关于我们",
-    "language": "语言",
-    "chinese": "中文",
-    "english": "英文",
-    "save": "保存",
-    "cancel": "取消",
-    "confirm": "确认"
-  },
-  "home": {
-    "title": "考勤补贴系统",
-    "description": "欢迎使用考勤补贴管理系统",
-    "checkAttendance": "打卡考勤",
-    "viewRecords": "查看记录",
-    "applyAllowance": "申请补贴"
-  },
-  "about": {
-    "title": "关于我们",
-    "company": "南京航空航天大学",
-    "version": "版本 1.0.0",
-    "copyright": "© 2025 版权所有"
-  }
+  "home": "首页",
+  "statistics": "统计",
+  "profile": "我的",
+  "attendance-confirmation": "考勤确认",
+  "attendance-details": "考勤明细",
+  "allowance-details": "补贴明细",
+  "welcomeBack": "欢迎回来"
+
 }

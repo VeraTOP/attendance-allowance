@@ -1,25 +1,9 @@
 {
-  "common": {
-    "home": "Home",
-    "about": "About Us",
-    "language": "Language",
-    "chinese": "Chinese",
-    "english": "English",
-    "save": "Save",
-    "cancel": "Cancel",
-    "confirm": "Confirm"
-  },
-  "home": {
-    "title": "Attendance Allowance System",
-    "description": "Welcome to the Attendance Allowance Management System",
-    "checkAttendance": "Check Attendance",
-    "viewRecords": "View Records",
-    "applyAllowance": "Apply Allowance"
-  },
-  "about": {
-    "title": "About Us",
-    "company": "Nanjing University of Aeronautics and Astronautics",
-    "version": "Version 1.0.0",
-    "copyright": "© 2025 All Rights Reserved"
-  }
+  "home": "Home",
+  "statistics": "Statistics",
+  "profile": "Profile",
+  "attendance-confirmation": "Attendance Confirmation",
+  "attendance-details": "Attendance Details",
+  "allowance-details": "Allowance Details",
+  "welcomeBack": "Welcome Back"
 }

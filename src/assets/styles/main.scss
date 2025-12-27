@@ -2,14 +2,28 @@
 @use './reset.scss';
 @use './dark.scss';
 
+// Tailwind 基础样式
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 
 // Vant 样式
 @import 'vant/lib/index.css';
 :root:root {
   --van-blue: #0ea5e9;
+  --van-blue-light: #90dfff;
+  --van-blue-lighter: #eef7fa;
+  --van-blue-lightest: #f5f7fa;
+  --van-blur-dark: #049ee6;
+  --van-blur-darken: #0284c7;
+  --van-tabbar-height: 72px;
   // --van-button-primary-background: red;
 }
-
+.bg-primary-gradient {
+  background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+  // background: linear-gradient(135deg, #38bdf8 0%, #189bdc 100%);
+}
 // 全局样式
 .container {
   max-width: 100%;
