@@ -5,7 +5,7 @@
         p(class="text-sm")
           span(class="mr-1 opacity-80") {{t('welcomeBack')}}
           span(class="inline-block w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse relative top-[-2px]")
-        p(class="text-[2rem] font-bold") {{userinfo.username}}
+        p(class="text-[2rem] font-bold ") {{userinfo.username}}
         p(class="flex items-center gap-1.5 mt-2 text-blue-50/90 bg-white/10 w-fit px-3 py-1.5 rounded-full text-xs font-medium backdrop-blur-md border border-white/10 shadow-sm transition-transform")
           van-icon(name="label-o")
           span {{userinfo.department}}

@@ -114,7 +114,7 @@ onMounted(() => {
   padding: 0.625rem 0.375rem;
 }
 .van-tabbar-item--active .van-tabbar-item__icon {
-  background-color: var(--van-blue-lighter);
+  background-color: var(--van-blue-lightest);
   border-radius: 1rem;
 }
 </style>
