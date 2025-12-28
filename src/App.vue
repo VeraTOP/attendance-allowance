@@ -1,9 +1,10 @@
 <template lang="pug">
 van-config-provider(:theme="currentTheme")
   #app
-    van-nav-bar(v-if="isNavBar" :title="title" left-arrow  @click-left="onClickLeft")
+    van-sticky
+      van-nav-bar(v-if="isNavBar" :title="title" left-arrow  @click-left="onClickLeft")
     router-view
-    van-tabbar(v-if="isTabbar" v-model="active" )
+    van-tabbar(v-if="isTabbar" v-model="active")
       van-tabbar-item(v-for="(item, i) in tabList" :key="item.name" :name="i" :icon="item.icon" :to="item.link") {{ t(item.name) }}
 </template>
 
