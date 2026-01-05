@@ -13,7 +13,7 @@
         div(v-else-if="item.status == '2'" class="flex items-center justify-center rounded-2xl bg-amber-50 text-amber-600 w-12 h-12 shadow-sm border border-amber-100/50")
           van-icon(name="underway-o" size="24")
       van-col(:span="18")
-        p {{item.title}}
+        p(class="text-[17px] font-bold text-slate-800 tracking-tight") {{item.title}}
         p(class="text-[13px] text-slate-500 leading-relaxed mt-1")
           van-icon(name="clock-o" size="12" class="mr-1")
           span {{item.datetime}}

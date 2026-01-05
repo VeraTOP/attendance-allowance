@@ -3,7 +3,7 @@ van-config-provider(:theme="currentTheme")
   #app
     van-sticky
       van-nav-bar(v-if="isNavBar" :title="title" left-arrow  @click-left="onClickLeft")
-    router-view
+    router-view(:class="isTabbar ? 'tabbar-padding-bottom' : ''")
     van-tabbar(v-if="isTabbar" v-model="active")
       van-tabbar-item(v-for="(item, i) in tabList" :key="item.name" :name="i" :icon="item.icon" :to="item.link") {{ t(item.name) }}
 </template>
@@ -81,7 +81,8 @@ const handleLogin = () => {
     email: 'test@example.com',
     avatar: 'https://picsum.photos/200/200',
     sex: '1',
-    department: '高级开发工程师'
+    department: '高级开发工程师',
+    sno: '2023010101'
   }
 
   const mockToken = 'mock-jwt-token-123456'

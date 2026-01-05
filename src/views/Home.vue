@@ -1,5 +1,5 @@
 <template lang="pug">
-#Home(class="relative tabbar-padding-bottom")
+#Home(class="relative")
   div(class="absolute top-0 w-full h-[36vh] bg-primary-gradient rounded-b-[2.5rem] z-[-1]")
   UserInfo
   TotalData

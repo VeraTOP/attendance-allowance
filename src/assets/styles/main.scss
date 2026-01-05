@@ -13,7 +13,7 @@
 :root:root {
   --van-blue: #0ea5e9;
   --van-blue-light: #90dfff;
-  --van-blue-lighter: #eef7fa;
+  --van-blue-lighter: #beecfb;
   --van-blue-lightest: #f5f7fa;
   --van-blue-dark: #049ee6;
   --van-blue-darken: #0284c7;
@@ -21,11 +21,20 @@
   --van-primary-color: #0ea5e9;
   // --van-primary-color: #3b82f6;
   --van-primary-color-lightest: #eff6ff;
+  --van-tabs-card-height: 50px;
+  --van-calendar-selected-day-size: 44px;
+  --van-calendar-header-subtitle-font-size: 1.25rem;
   // --van-button-primary-background: red;
 }
 .bg-primary-gradient {
   background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
   // background: linear-gradient(135deg, #38bdf8 0%, #189bdc 100%);
+}
+.bg-primary {
+  background-color: var(--van-primary-color);
+}
+.text-primary {
+  color: var(--van-primary-color);
 }
 // 全局样式
 .container {
@@ -55,4 +64,8 @@
 
 .tabbar-padding-bottom {
   padding-bottom: var(--van-tabbar-height);
+}
+
+.border-primary {
+  border-color: var(--van-primary-color);
 }
