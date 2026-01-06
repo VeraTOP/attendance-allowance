@@ -32,7 +32,7 @@ import { dateUtil } from '@/assets/scripts/date-util'
 
 // 模拟数据
 const days = ref(22)
-const number = ref(31)
+const number = ref(1)
 // const updateDate = ref('2025-12-27 10:30:00')
 
 // 使用日期工具格式化日期

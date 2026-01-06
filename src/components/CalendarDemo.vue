@@ -44,7 +44,7 @@ const markedDates = ref(['2025-12-28', '2025-12-31'])
 // 自定义标记逻辑
 const getMark = (date: Date) => {
   const marks = []
-
+  
   // 格式化日期为YYYY-MM-DD格式
   const formatDate = (d: Date): string => {
     const year = d.getFullYear()
@@ -52,19 +52,19 @@ const getMark = (date: Date) => {
     const day = String(d.getDate()).padStart(2, '0')
     return `${year}-${month}-${day}`
   }
-
+  
   const dateStr = formatDate(date)
-
+  
   // 默认标记 - 红色
   if (dateStr === '2025-12-28') {
     marks.push({ color: '#ff4d4f', type: 'dot' })
   }
-
+  
   // 动态标记 - 绿色
   if (markedDates.value.includes(dateStr) && dateStr !== '2025-12-28') {
     marks.push({ color: '#52c41a', type: 'dot' })
   }
-
+  
   return marks
 }
 
