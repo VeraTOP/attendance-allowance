@@ -6,7 +6,7 @@ import './assets/styles/main.scss'
 import { setupI18n, initI18n } from './i18n'
 // 导入Vant组件
 import { ConfigProvider,Button, Cell, CellGroup, Popup, Radio, RadioGroup, Icon, Tabbar,TabbarItem, NavBar, Image as VanImage,
-  Grid, GridItem, Col, Row, Progress, Empty, Sticky, Tab, Tabs, Calendar, Checkbox
+  Grid, GridItem, Col, Row, Progress, Empty, Sticky, Tab, Tabs, Calendar, Checkbox, DatePicker
  } from 'vant'
 
 const app = createApp(App)
@@ -37,6 +37,7 @@ app.use(ConfigProvider)
    .use(Tabs)
    .use(Calendar)
    .use(Checkbox)
+   .use(DatePicker)
 
 // 初始化i18n，生产环境从public/locales加载语言文件
 initI18n().then(() => {
