@@ -1,11 +1,12 @@
 <template lang="pug">
 #AttendanceDetails(class="p-4")
-  van-row(:gutter="16" class="mb-3")
+  van-row(:gutter="16" class="mb-2")
     van-col(:span="10")
       //- div(class="flex justify-center") {{currentDate}}
-      van-button(type="primary" round class="h-8"  @click="onClick")
+      van-button(type="primary" round class="h-8" plain @click="onClick")
         span {{isEmpty(selectedDate) ? currentDate :  `${selectedDate[0]}年${selectedDate[1]}月`}}
-        img(:src="calendar" width="18" height="18" class="inline ml-1 icon-white relative -top-0.5")
+        van-icon(name="notes-o" size="18" class="relative top-[1px]")
+        //- img(:src="calendar" width="18" height="18" class="inline ml-1 icon-white relative -top-0.5")
         //- van-icon(name="check")
   template(v-for="item in list" :key="item.id")
     AttendanceItem(:data="item")
@@ -22,7 +23,7 @@ import  { ref, computed } from 'vue'
 import { isEmpty } from 'lodash'
 import { dateUtil } from '@/assets/scripts/date-util'
 import AttendanceItem from '@/components/attendanceItem.vue'
-import calendar from '@/assets/images/icon/calendar.svg'
+
 
 
 const currentDate = computed(() => {
@@ -55,7 +56,7 @@ const list = ref([
 ])
 const isPicker = ref(false)
 const selectedDate = ref()
-const dateValue = ref(dateUtil.formatDate(new Date(), 'YYYY-MM').split('-'))
+const dateValue = ref(dateUtil.formatDate(new Date(), 'YYYY-MM').split('-'));
 const columnsType = ref(['year', 'month'])
 
 const onClick = () => {
@@ -74,7 +75,5 @@ const handleConfirm = (date: any) => {
 
 <style lang="scss">
 // 考勤明细页面样式
-.icon-white {
-  filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7472%) hue-rotate(265deg) brightness(105%) contrast(101%);
-}
+
 </style>
