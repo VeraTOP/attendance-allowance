@@ -13,7 +13,7 @@
       div(class="font-bold text-slate-800 text-[15px]") {{item.name}}
       div(class="font-medium text-slate-400 mt-2 text-xs") {{dateUtil.format(item.date, 'MM-DD hh:mm')}}
     van-col(:span="9")
-      div(class="font-bold text-slate-800 text-[17px] text-right") {{utils.formatCurrency(item.allowance)}}
+      //- div(class="font-bold text-slate-800 text-[17px] text-right") {{utils.formatCurrency(item.allowance)}}
       div(class="mt-1 float-right")
         span(v-if="item.status === 1" class="rounded-md bg-emerald-50 px-2 py-1 text-emerald-600 text-xs") 已发放
         span(v-else-if="item.status === 2" class="rounded-md bg-amber-50 px-2 py-1 text-amber-600 text-xs") 待审核

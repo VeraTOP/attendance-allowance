@@ -56,8 +56,9 @@ import { ref, computed } from 'vue'
 import { dateUtil } from '@/assets/scripts/date-util'
 import traffic from '@/assets/images/icon/traffic.svg'
 import dning from '@/assets/images/icon/dning.svg'
-const currentDay = computed(() => {
-  return dateUtil.formatDate(new Date(), 'MM月DD日');
-});
+// const currentDay = computed(() => {
+//   return dateUtil.formatDate(new Date(), 'MM月DD日');
+// });
 
+// const
 </script>

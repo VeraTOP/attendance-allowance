@@ -165,8 +165,8 @@ export const dateUtil = {
 
   /**
    * 计算两个时间之间的时长
-   * @param startTime 开始时间，格式为hh:mm:ss
-   * @param endTime 结束时间，格式为hh:mm:ss
+   * @param startTime 开始时间，格式为hh:mm:ss或YYYY-MM-DD hh:mm:ss
+   * @param endTime 结束时间，格式为hh:mm:ss或YYYY-MM-DD hh:mm:ss
    * @param options 选项
    * @param options.unit 返回单位：'hours'（小时）、'minutes'（分钟）、'seconds'（秒）或 'format'（格式化为hh:mm:ss）
    * @returns 时长
@@ -176,21 +176,24 @@ export const dateUtil = {
   } = {}): string | number {
     const { unit = 'format' } = options
 
-    // 解析时间字符串为小时、分钟、秒
-    const parseTime = (timeStr: string): { hours: number; minutes: number; seconds: number } => {
-      const [hours, minutes, seconds] = timeStr.split(':').map(Number)
-      return { hours, minutes, seconds }
+    // 解析时间字符串为Date对象
+    const parseTime = (timeStr: string): Date => {
+      // 检查是否包含日期部分
+      if (timeStr.includes(' ')) {
+        // 格式为YYYY-MM-DD hh:mm:ss
+        return new Date(timeStr)
+      } else {
+        // 格式为hh:mm:ss，使用当前日期
+        const today = new Date().toISOString().split('T')[0]
+        return new Date(`${today} ${timeStr}`)
+      }
     }
 
     const start = parseTime(startTime)
     const end = parseTime(endTime)
 
-    // 计算总秒数
-    const startTotalSeconds = start.hours * 3600 + start.minutes * 60 + start.seconds
-    const endTotalSeconds = end.hours * 3600 + end.minutes * 60 + end.seconds
-
     // 计算差值（处理跨天情况，取绝对值）
-    let diffSeconds = Math.abs(endTotalSeconds - startTotalSeconds)
+    let diffSeconds = Math.abs(Math.floor((end.getTime() - start.getTime()) / 1000))
 
     // 转换为小时、分钟、秒
     const hours = Math.floor(diffSeconds / 3600)

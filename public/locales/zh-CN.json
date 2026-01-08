@@ -5,6 +5,29 @@
   "attendance-confirmation": "考勤确认",
   "attendance-details": "考勤明细",
   "allowance-details": "补贴明细",
-  "welcomeBack": "欢迎回来"
-
+  "welcomeBack": "欢迎回来",
+  "workNumber": "工号",
+  "attendance": "出勤",
+  "allowanceTimes": "补助次数",
+  "allowanceTimesUnit": "次",
+  "workDuration": "工作时长",
+  "attendanceSignIn": "签到",
+  "attendanceSignOut": "签退",
+  "attendanceType": {
+    "1": "正常",
+    "2": "补录"
+  },
+  "noAttendanceDetail": "暂无考勤明细",
+  "selectYearMonth": "选择年月",
+  "attendanceDetail": "考勤明细",
+  "viewAll": "查看全部",
+  "toBeDone": "待办",
+  "viewNow": "立即查看",
+  "attendanceConfirmation": "考勤确认",
+  "toBeDoneDescription": "{YearMonth}考勤数据已生成，请在{EndDate}之前确认",
+  "attendanceCalendar": "考勤日历",
+  "allowanceCalendar": "补助日历",
+  "monthlyAttendance": "本月考勤",
+  "monthlyAllowance": "本月补录",
+  "attendanceDaysUnit": "天"
 }

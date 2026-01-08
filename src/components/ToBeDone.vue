@@ -1,6 +1,6 @@
 <template lang="pug">
 #ToBeDone(class="px-5 mt-6")
-  p(class="px-1 text-[17px] font-bold text-slate-800 tracking-tight flex items-center gap-2") 待办
+  p(class="px-1 text-[17px] font-bold text-slate-800 tracking-tight flex items-center gap-2") {{t('toBeDone')}}
     span(v-if="!isEmpty(data)" class="flex h-2 w-2 relative")
       span(class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75")
       span(class="relative inline-flex rounded-full h-2 w-2 bg-red-500")
@@ -14,26 +14,46 @@
         p(class="text-[17px] font-bold text-slate-800 leading-tight") {{data.title}}
         p(class="text-[13px] text-slate-500 leading-relaxed mt-1") {{data.describe}}
         //- p(class="text-[15px] text-slate-500 tracking-tight") {{data.status}}
-    van-button(class="w-full mt-4" type="primary" class="rounded-xl" @click="handleClick") 立即查看
+    van-button(class="w-full mt-4" type="primary" class="rounded-xl" @click="handleClick") {{t('viewNow')}}
       van-icon(name="arrow" class="ml-1")
   div(v-else)
     van-empty(class="p-0" image="search" description="暂无待办任务" image-size="8rem")
     // p(class="text-[15px] text-slate-500 tracking-tight") 暂无待办任务
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 import { isEmpty } from 'lodash'
+import { Allowance } from '@/api'
+import { dateUtil } from '@/assets/scripts/date-util'
+import { useI18n } from '@/i18n'
+
+const { t, locale, changeLocale } = useI18n()
 // const data = ref()
+const props = defineProps({
+  data: {
+    type: Object,
+    default: () => ({})
+  }
+})
+const confirmData = computed(() => props.data)
 const data = ref({
-  title: '考勤确认',
-  describe: '10月考勤数据已生成，请在10月31日之前确认',
-  status: '待确认'
+  title: t('attendanceConfirmation'),
+  describe: t('toBeDoneDescription', {
+    YearMonth: dateUtil.format(confirmData.value?.currentMonth, locale.value === 'zh-CN' ? 'YYYY年MM月' : 'YYYY-MM'),
+    EndDate: dateUtil.format(confirmData.value?.startDate, locale.value === 'zh-CN' ? 'YYYY年MM月DD日' : 'YYYY-MM-DD')
+  }),
+  // describe: dateUtil.format(confirmData.value?.currentMonth, 'YYYY年MM月') + '考勤数据已生成，请在' + dateUtil.format(confirmData.value?.startDate, 'YYYY年MM月DD日') + '之前确认',
+  // status: '待确认'
 })
 
 const handleClick = () => {
-  console.log('点击了立即查看')
+  // console.log('点击了立即查看')
   router.push({ name: 'attendance-confirmation' })
 }
+
+onMounted(() => {
+
+})
 </script>

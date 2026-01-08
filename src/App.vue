@@ -10,13 +10,17 @@ van-config-provider(:theme="currentTheme")
 
 <script setup lang="ts">
 import { useI18n } from '@/i18n'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import { utils } from '@/assets/scripts/utils'
+import { Allowance } from '@/api/index'
 
 const { t } = useI18n()
 const userStore = useUserStore()
 
+const token = computed(() => userStore.token)
+const userInfo = computed(() => userStore.userInfo)
 // 响应式变量存储当前主题
 const currentTheme = ref('light')
 const active = ref(0)
@@ -72,29 +76,57 @@ const onClickLeft = () => {
   router.back()
 }
 // 模拟登录函数
-const handleLogin = () => {
-  // 这里应该调用实际的登录API
-  // 模拟登录成功后设置用户信息和token
-  const mockUserInfo = {
-    id: 1,
-    username: '张伟',
-    email: 'test@example.com',
-    avatar: 'https://picsum.photos/200/200',
-    sex: '1',
-    department: '高级开发工程师',
-    sno: '2023010101'
+// const handleLogin = () => {
+//   // 这里应该调用实际的登录API
+//   // 模拟登录成功后设置用户信息和token
+//   const mockUserInfo = {
+//     id: 1,
+//     username: '张伟',
+//     email: 'test@example.com',
+//     avatar: 'https://picsum.photos/200/200',
+//     sex: '1',
+//     department: '高级开发工程师',
+//     sno: '2023010101'
+//   }
+
+//   const mockToken = 'mock-jwt-token-123456'
+
+//   userStore.setUserInfo(mockUserInfo)
+//   userStore.setToken(mockToken)
+
+//   console.log('登录成功:', userStore.userInfo, userStore.token)
+// }
+const getToken = () => {
+  const { token, ...restParams } = utils.getUrlParams()
+  if (token) {
+    userStore.setToken(token)
+    getUser()
+
+    // 从地址栏中移除token参数
+    const params = new URLSearchParams()
+    Object.entries(restParams).forEach(([key, value]) => {
+      params.append(key, value.toString())
+    })
+
+    const newSearch = params.toString() ? `?${params.toString()}` : ''
+    const newUrl = `${window.location.pathname}${newSearch}${window.location.hash}`
+
+    window.history.replaceState({}, '', newUrl)
   }
-
-  const mockToken = 'mock-jwt-token-123456'
-
-  userStore.setUserInfo(mockUserInfo)
-  userStore.setToken(mockToken)
-
-  console.log('登录成功:', userStore.userInfo, userStore.token)
+}
+const getUser = async () => {
+  const res = await Allowance.getUserInfo()
+  // console.log('getUser', res)
+  if (res.data) userStore.setUserInfo(res.data)
 }
 onMounted(() => {
   init(route)
-  handleLogin()
+  if (token.value) {
+    if (!userInfo.value) getUser()
+  } else {
+    getToken()
+  }
+  // handleLogin()
   // 获取浏览器初始颜色模式
   const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
   currentTheme.value = mediaQuery.matches ? 'dark' : 'light'

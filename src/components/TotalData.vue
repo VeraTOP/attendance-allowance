@@ -9,7 +9,7 @@
           van-image(:src="calendar" class="w-6 h-6")
           //- van-icon(name="notes-o" size="24" color="var(--van-primary-color)")
         div(class="mt-4")
-          p(class="text-xs text-slate-400") {{currentDate}}出勤
+          p(class="text-xs text-slate-400") {{currentDate}} {{t('attendance')}}
           p(class="mt-1")
             span(class="text-3xl font-bold text-slate-850 tracking-tight mr-1") {{days}}
             span(class="text-sm font-medium text-slate-400") /  {{daysInCurrentMonth}}
@@ -24,10 +24,10 @@
           van-image(:src="cash" class="w-6 h-6")
           //- van-icon(name="pending-payment" size="24" color="var(--van-blue)")
         div(class="mt-4")
-          p(class="text-xs text-slate-400 mt-1") 补助预估
+          p(class="text-xs text-slate-400 mt-1") {{t('allowanceTimes')}}
           p(class="mt-1")
             span(class="text-3xl font-bold text-slate-850 tracking-tight mr-1") {{number}}
-            span(class="text-sm font-medium text-slate-400") 次
+            span(class="text-sm font-medium text-slate-400") {{t('allowanceTimesUnit')}}
           p(class="mt-5")
           //- p(class="text-lg font-bold text-[#303133]") ¥{{ totalAmount }}
           //- p(class="text-xs text-slate-400 mt-1") 上次更新 {{ updateTime }}
@@ -38,10 +38,18 @@ import { ref, computed } from 'vue'
 import calendar from '@/assets/images/icon/calendar.svg'
 import cash from '@/assets/images/icon/cash.svg'
 import { dateUtil } from '@/assets/scripts/date-util'
+import { useI18n } from '@/i18n'
 
-// 模拟数据
-const days = ref(22)
-const number = ref(31)
+const { t } = useI18n()
+
+const props = defineProps({
+  data: {
+    type: Object,
+    default: () => ({})
+  }
+})
+const days = computed(() => props.data.days)
+const number = computed(() => props.data.num)
 // const updateDate = ref('2025-12-27 10:30:00')
 
 // 使用日期工具格式化日期

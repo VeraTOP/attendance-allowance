@@ -4,14 +4,17 @@
     van-col(:span="10")
       //- div(class="flex justify-center") {{currentDate}}
       van-button(type="primary" round class="h-8" plain @click="onClick")
-        span {{isEmpty(selectedDate) ? currentDate :  `${selectedDate[0]}年${selectedDate[1]}月`}}
+        span(v-if="locale === 'zh-CN'") {{isEmpty(selectedDate) ? currentDates.info :  `${selectedDate[0]}年${selectedDate[1]}月`}}
+        span(v-else) {{isEmpty(selectedDate) ? currentDates.date :  `${selectedDate[1]}-${selectedDate[0]}`}}
         van-icon(name="notes-o" size="18" class="relative top-[1px]")
         //- img(:src="calendar" width="18" height="18" class="inline ml-1 icon-white relative -top-0.5")
         //- van-icon(name="check")
-  template(v-for="item in list" :key="item.id")
+  template(v-if="!isEmpty(list)" v-for="item in list" :key="item.id")
     AttendanceItem(:data="item")
+  div(v-else)
+    van-empty(class="p-0 mb-6" :description="t('noAttendanceDetail')" image-size="8rem")
   van-popup(v-model:show="isPicker" position="bottom")
-    van-date-picker(v-model="dateValue" title="选择年月" :max-date="new Date()" :columns-type="columnsType" @confirm="handleConfirm")
+    van-date-picker(v-model="dateValue" :title="t('selectYearMonth')" :max-date="new Date()" :columns-type="columnsType" @confirm="handleConfirm")
   //-   van-col(:span="8")
   //-     van-button(type="primary" plain) 全部类型
   //-   van-col(:span="8")
@@ -19,41 +22,34 @@
 </template>
 
 <script setup lang="ts">
-import  { ref, computed } from 'vue'
+import  { ref, computed, onMounted } from 'vue'
 import { isEmpty } from 'lodash'
 import { dateUtil } from '@/assets/scripts/date-util'
-import AttendanceItem from '@/components/attendanceItem.vue'
+import AttendanceItem from '@/components/AttendanceItem.vue'
+import { Allowance } from '@/api/index'
+import { useI18n } from '@/i18n'
 
+const { t, locale } = useI18n()
 
-
-const currentDate = computed(() => {
-  return dateUtil.formatDate(new Date(), 'YYYY年MM月')
-})
-// 考勤明细页面逻辑
-const list = ref([
-  {
-    id: 1,
-    title: '正常考勤',
-    // describe: '10月考勤数据已生成，请在10月31日之前确认',
-    // datetime: '2023-10-01 00:00:00',
-    date: '2023-10-9',
-    startTime: '08:00:00',
-    endTime: '18:00:00',
-    status: '1',
-    position: '教学楼-1-203'
-  },
-  {
-    id: 2,
-    title: '迟到打卡',
-    // describe: '10月考勤数据已生成，请在10÷月31日之前确认',
-    // datetime: '2023-10-01 00:00:00',
-    date: '2023-10-10',
-    startTime: '09:23:09',
-    endTime: '18:00:00',
-    status: '2',
-    position: '教学楼-1-203'
+const currentDates = computed(() => {
+  return {
+    date: dateUtil.formatDate(new Date(), 'YYYY-MM'),
+    info: dateUtil.formatDate(new Date(), 'YYYY年MM月')
   }
-])
+})
+const list = ref([])
+const getAttendanceList = async (date: string = currentDates.value.date) => {
+  const params = {
+    attendanceMonth: date,
+    // attendanceMonth: currentDate.value,
+    current: 1,
+    size: 31
+  }
+  const res = await Allowance.getAttendanceInfoList(params)
+  console.log('getAttendanceList', res)
+  list.value = res.data?.records || []
+}
+
 const isPicker = ref(false)
 const selectedDate = ref()
 const dateValue = ref(dateUtil.formatDate(new Date(), 'YYYY-MM').split('-'));
@@ -66,11 +62,15 @@ const handleConfirm = (date: any) => {
   isPicker.value = false
   console.log(date)
   selectedDate.value = date.selectedValues
+  getAttendanceList(selectedDate.value.join('-'))
   // 格式化日期为YYYY-MM-DD格式
   // const formattedDate = dateUtil.formatDate(date, 'YYYY-MM-DD')
   // 更新当前日期显示
   // currentDate.value = formattedDate
 }
+onMounted(() => {
+  getAttendanceList()
+})
 </script>
 
 <style lang="scss">

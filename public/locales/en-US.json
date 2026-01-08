@@ -5,5 +5,9 @@
   "attendance-confirmation": "Attendance Confirmation",
   "attendance-details": "Attendance Details",
   "allowance-details": "Allowance Details",
-  "welcomeBack": "Welcome Back"
+  "welcomeBack": "Welcome Back",
+  "workNumber": "Work Number",
+  "attendance": "Attendance",
+  "allowanceTimes": "Allowance Times",
+  "allowanceTimesUnit": "times"
 }
