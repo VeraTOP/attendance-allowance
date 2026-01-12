@@ -37,7 +37,7 @@ export class ApiService {
       baseURL: process.env.NODE_ENV === 'development' ? baseURL : window.location.origin,
       timeout: 10000,
       headers: {
-        'Content-Type': 'application/json'
+        // 不硬编码Content-Type，让具体请求方法根据数据类型动态设置
       }
     })
 
@@ -114,7 +114,25 @@ export class ApiService {
         // 可以在这里添加加载状态
         console.log('Loading...')
       }
-      const response = await this.instance.post<ApiResponse<T>>(url, data)
+
+      // 根据数据类型设置请求配置
+      const config: any = {
+        headers: {}
+      }
+
+      // 如果不是FormData类型，设置Content-Type为application/json
+      // console.log('data instanceof FormData', data instanceof FormData)
+      // if (!(data instanceof FormData)) {
+      //   (config.headers as Record<string, string>)['Content-Type'] = 'application/json'
+      // }
+      config.headers['Content-Type'] = 'multipart/form-data'
+      // if (!(data instanceof FormData)) {
+      //   (config.headers as Record<string, string>)['Content-Type'] = 'application/json'
+      // }
+      // 如果是FormData类型，不设置Content-Type，让axios自动处理
+
+      const response = await this.instance.post<ApiResponse<T>>(url, data, config)
+      console.log('post',  response.data)
       return response.data
     } catch (error) {
       if (options?.handleError) {
@@ -137,7 +155,19 @@ export class ApiService {
         // 可以在这里添加加载状态
         console.log('Loading...')
       }
-      const response = await this.instance.put<ApiResponse<T>>(url, data)
+
+      // 根据数据类型设置请求配置
+      const config = {
+        headers: {}
+      }
+
+      // 如果不是FormData类型，设置Content-Type为application/json
+      if (!(data instanceof FormData)) {
+        (config.headers as Record<string, string>)['Content-Type'] = 'application/json'
+      }
+      // 如果是FormData类型，不设置Content-Type，让axios自动处理
+
+      const response = await this.instance.put<ApiResponse<T>>(url, data, config)
       return response.data
     } catch (error) {
       if (options?.handleError) {

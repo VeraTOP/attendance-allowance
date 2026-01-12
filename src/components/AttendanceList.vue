@@ -16,7 +16,7 @@
         p(class="text-[17px] font-bold text-slate-800 tracking-tight") {{t('attendanceType.' + item.status)}}
         p(class="text-[13px] text-slate-500 leading-relaxed mt-1")
           van-icon(name="clock-o" size="12" class="mr-1")
-          span {{dateUtil.format(item.attendanceStartDatetime, (locale === 'zh-CN' ? 'MM月DD日 HH:mm' : 'MM-DD HH:mm'))}}
+          span {{dateUtil.format(item.attendanceStartDatetime, (locale === 'zh-CN' ? 'MM月DD日 HH:mm' : 'DD/MM HH:mm'))}}
         //- p(class="text-[13px] text-slate-500 leading-relaxed mt-1")
           van-icon(name="location-o" size="12" class="mr-1")
           span {{item.position}}

@@ -244,6 +244,48 @@ export const dateUtil = {
         : ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
       return days[dayjsDate.day()]
     }
+  },
+
+  /**
+   * 获取连续出勤天数
+   * @param attendanceDates 出勤日期数组，元素可以是Date对象、字符串或数字
+   * @returns 最长连续出勤天数
+   */
+  getConsecutiveAttendanceDays(attendanceDates: Array<Date | string | number>): number {
+    if (!attendanceDates || attendanceDates.length === 0) {
+      return 0
+    }
+
+    // 转换并排序日期
+    const sortedDates = attendanceDates
+      .map(date => dayjs(date).format('YYYY-MM-DD'))
+      .filter((value, index, self) => self.indexOf(value) === index) // 去重
+      .sort()
+
+    if (sortedDates.length === 0) {
+      return 0
+    }
+
+    let maxConsecutive = 1
+    let currentConsecutive = 1
+
+    // 计算连续天数
+    for (let i = 1; i < sortedDates.length; i++) {
+      const prevDate = dayjs(sortedDates[i - 1])
+      const currDate = dayjs(sortedDates[i])
+      const diffDays = currDate.diff(prevDate, 'day')
+
+      if (diffDays === 1) {
+        // 连续的一天
+        currentConsecutive++
+        maxConsecutive = Math.max(maxConsecutive, currentConsecutive)
+      } else {
+        // 不连续，重置计数器
+        currentConsecutive = 1
+      }
+    }
+
+    return maxConsecutive
   }
 }
 

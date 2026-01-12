@@ -1,20 +1,23 @@
 <template lang="pug">
-#AttendanceDetails(class="p-4")
-  van-row(:gutter="16" class="mb-2")
-    van-col(:span="10")
-      //- div(class="flex justify-center") {{currentDate}}
-      van-button(type="primary" round class="h-8" plain @click="onClick")
-        span(v-if="locale === 'zh-CN'") {{isEmpty(selectedDate) ? currentDates.info :  `${selectedDate[0]}年${selectedDate[1]}月`}}
-        span(v-else) {{isEmpty(selectedDate) ? currentDates.date :  `${selectedDate[1]}-${selectedDate[0]}`}}
-        van-icon(name="notes-o" size="18" class="relative top-[1px]")
+#AttendanceDetails(ref="containerRef")
+  van-sticky(:container="containerRef" :offset-top="46" )
+    van-row(:gutter="16" class="mb-2 bg-[#f5f7fa] p-4")
+      van-col(:span="10")
+        //- div(class="flex justify-center") {{currentDate}}
+        van-button(type="primary" round class="h-8" plain @click="onClick")
+          //- span {{isEmpty(selectedDate) ? currentDates :  `${selectedDate[0]}年${selectedDate[1]}月`}}
+          span(v-if="locale === 'zh-CN'") {{isEmpty(selectedDate) ? dateUtil.formatDate(new Date(), 'YYYY年MM月') : `${selectedDate[0]}年${selectedDate[1]}月`}}
+          span(v-else) {{isEmpty(selectedDate) ? dateUtil.formatDate(new Date(), 'YYYY/MM') : `${selectedDate[1]}/${selectedDate[0]}`}}
+          van-icon(name="notes-o" size="18" class="relative top-[1px]")
         //- img(:src="calendar" width="18" height="18" class="inline ml-1 icon-white relative -top-0.5")
         //- van-icon(name="check")
-  template(v-if="!isEmpty(list)" v-for="item in list" :key="item.id")
-    AttendanceItem(:data="item")
-  div(v-else)
-    van-empty(class="p-0 mb-6" :description="t('noAttendanceDetail')" image-size="8rem")
+  div(class="px-4")
+    template(v-if="!isEmpty(list)" v-for="item in list" :key="item.id")
+      AttendanceItem(:data="item")
+    div(v-else)
+      van-empty(class="p-0 mb-6" :description="t('noAttendanceDetail')" image-size="8rem")
   van-popup(v-model:show="isPicker" position="bottom")
-    van-date-picker(v-model="dateValue" :title="t('selectYearMonth')" :max-date="new Date()" :columns-type="columnsType" @confirm="handleConfirm")
+      van-date-picker(v-model="dateValue" :title="t('selectYearMonth')" :max-date="new Date()" :columns-type="columnsType" @confirm="handleConfirm")
   //-   van-col(:span="8")
   //-     van-button(type="primary" plain) 全部类型
   //-   van-col(:span="8")
@@ -31,14 +34,18 @@ import { useI18n } from '@/i18n'
 
 const { t, locale } = useI18n()
 
-const currentDates = computed(() => {
-  return {
-    date: dateUtil.formatDate(new Date(), 'YYYY-MM'),
-    info: dateUtil.formatDate(new Date(), 'YYYY年MM月')
-  }
+const containerRef = ref(null)
+
+const currentDate = computed(() => {
+  // return '2025-12'
+  return dateUtil.formatDate(new Date(), 'YYYY-MM')
+  // return {
+  //   date: dateUtil.formatDate(new Date(), 'YYYY-MM'),
+  //   info: dateUtil.formatDate(new Date(), 'YYYY年MM月')
+  // }
 })
 const list = ref([])
-const getAttendanceList = async (date: string = currentDates.value.date) => {
+const getAttendanceList = async (date: string = currentDate.value) => {
   const params = {
     attendanceMonth: date,
     // attendanceMonth: currentDate.value,

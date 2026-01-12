@@ -9,5 +9,30 @@
   "workNumber": "Work Number",
   "attendance": "Attendance",
   "allowanceTimes": "Allowance Times",
-  "allowanceTimesUnit": "times"
+  "allowanceTimesUnit": "times",
+  "workDuration": "Work Duration",
+  "attendanceSignIn": "Sign In",
+  "attendanceSignOut": "Sign Out",
+  "attendanceType": {
+    "1": "Normal",
+    "2": "Compensation"
+  },
+  "noAttendanceDetail": "No Attendance Detail",
+  "selectYearMonth": "Select Year Month",
+  "attendanceDetail": "Attendance Detail",
+  "viewAll": "View All",
+  "toBeDone": "To Be Done",
+  "viewNow": "View Now",
+  "attendanceConfirmation": "Attendance Confirmation",
+  "toBeDoneDescription": "{YearMonth} attendance data has been generated, please confirm before {EndDate}",
+  "attendanceCalendar": "Attendance Calendar",
+  "allowanceCalendar": "Allowance Calendar",
+  "monthlyAttendance": "Monthly Attendance",
+  "monthlyAllowance": "Monthly Allowance",
+  "attendanceDaysUnit": "days",
+  "attendanceSignInTime": "Sign In Time",
+  "attendanceSignOutTime": "Sign Out Time",
+  "noAttendanceRecord": "No Attendance Record",
+  "today": "Today",
+  "dailyDetails": "Daily Details"
 }

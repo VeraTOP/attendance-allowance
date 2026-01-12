@@ -2,7 +2,7 @@
 #Home(class="relative")
   div(class="absolute top-0 w-full h-[36vh] bg-primary-gradient rounded-b-[2.5rem] z-[-1]")
   UserInfo
-  TotalData(:data="{days: list.length, num: 8 }")
+  TotalData(:data="{days: list.length, num: allowanceList.length }")
   ToBeDone(:data='confirmData')
   AttendanceList(:data="list")
 </template>
@@ -24,10 +24,11 @@ const { t, locale, changeLocale } = useI18n()
 const list = ref([])
 const confirmData = ref({})
 const currentDate = computed(() => dateUtil.format(new Date(), 'YYYY-MM'))
+// const currentDate = ref('2025-12')
 
 const getAttendanceList = async () => {
   const params = {
-    // attendanceMonth: '2025-12',
+    // attendanceMonth: ',
     attendanceMonth: currentDate.value,
     current: 1,
     size: 31
@@ -45,9 +46,20 @@ const getConfirmData = async () => {
   console.log('getConfirmData', res)
   confirmData.value = res.data?.[0]
 }
+
+const allowanceList = ref([])
+const getAllowanceList = async () => {
+  const params = {
+    allowanceMonth: currentDate.value
+  }
+  const res = await Allowance.getAllowanceInfoList(params)
+  console.log('getAllowanceInfoList', res)
+  allowanceList.value = res.data || []
+}
 onMounted(() => {
   getAttendanceList()
   getConfirmData()
+  getAllowanceList()
 })
 </script>
 

@@ -1,12 +1,14 @@
 <template lang="pug">
 #Statistics
   div(class="mx-10 py-3")
-    //- p --{{singinData}}
+    //- p --{{selectedDate}}
     van-tabs(van-tabs v-model:active="active" type="card")
       van-tab(:title="t('attendanceCalendar')" :name="1")
       van-tab(:title="t('allowanceCalendar')" :name="2")
   div(class="px-5")
-    van-calendar(title="" :poppable="false" :show-confirm="false" switch-mode="month" :show-title="false" :formatter="formatter" @panel-change="onChangeDate" @select="onSelectDate")
+    // ref="calendarRef"
+    van-calendar(title="" :poppable="false" :show-confirm="false" switch-mode="month" :show-title="false" :formatter="formatter" :min-date="new Date(2020, 0, 1)" :max-date="new Date()"
+      :default-date="selectedDate.data" @panel-change="onChangeDate" @select="onSelectDate")
       //- template(#subtitle )
       template(#bottom-info="{ type, bottomInfo }")
         div(v-if="type !== 'selected'")
@@ -15,34 +17,55 @@
   div(class="px-5 py-3 bg-white rounded-t-[2.25rem] mt-3 shadow-[0_-8px_30px_rgba(0,0,0,0.03)] border-t border-slate-50/80")
     div(class="w-full flex justify-center pb-4 cursor-grab active:cursor-grabbing")
       div(class="w-12 h-1.5 bg-slate-200/80 rounded-full hover:bg-slate-300 transition-colors")
-    AttendanceStatisticsDetail(v-if="active === 1" :data="{singinNum: singinData?.length || 0, unSigninMum: unSigninData?.length || 0, slectSinginData, selectedDate}")
+    AttendanceStatisticsDetail(v-if="active === 1")
     AllowanceStatisticsDetail(v-else-if="active === 2")
+    //- AttendanceStatisticsDetail(v-if="active === 1" :data="{singinNum: singinData?.length || 0, unSigninMum: unSigninData?.length || 0, slectSinginData, selectedDate}")
+    //- AllowanceStatisticsDetail(v-else-if="active === 2" :date="{allowanceDays: Object.keys(allowanceGroupByDate)?.length, slectSinginData, selectedDate, allowanceTotal, }")
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { dateUtil } from '@/assets/scripts/date-util'
-import { isEmpty } from 'lodash'
+import { isEmpty, groupBy, sumBy, cloneDeep } from 'lodash'
 import { Allowance } from '@/api'
 import AttendanceStatisticsDetail from '@/components/AttendanceStatisticsDetail.vue'
 import AllowanceStatisticsDetail from '@/components/AllowanceStatisticsDetail.vue'
+import { useStatisticsStore } from '@/stores/statistics'
+
+const { setAttendanceForDay, setAllowanceForDay } = useStatisticsStore()
+
 import { useI18n } from '@/i18n'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 // 统计页面逻辑
+const calendarRef: any = ref(null)
 const active = ref(1)
 const singinData :any = ref([]);
 const unSigninData :any = ref([]); // 补录
-const formatter = computed(() => {
-  // if (!singinData.value) {
-  //   return (day: any) => day;
-  // }
-  if (loading.value) {
-    return (day: any) => day;
-  }
-  return (day: any) => {
-    // day.bottomInfo = asyncData.value;
+
+const currentDate = computed(() => {
+  return dateUtil.formatDate(new Date(), 'YYYY-MM');
+});
+const slectSinginData = ref()
+const selectedDate = ref({
+  // data: dateUtil.formatDate(new Date(), 'YYYY-MM-DD'),
+  info: dateUtil.formatDate(new Date(), 'YYYY-MM-DD'),
+  data: new Date(),
+})
+// setTimeout(() => {
+//   singinData.value = ['2025-12-01', '2025-12-03', '2025-12-05', '2025-12-06', '2025-12-07', '2025-12-08'];
+//   unSigninData.value = ['2025-12-02', '2025-12-04', '2025-12-09'];
+// }, 1000);
+const loading = ref(false)
+const list = ref([])
+const allowanceList = ref([])
+const allowanceGroupByDate: any = ref({})
+const allowanceTotal = ref(0)
+
+const formatter = (day: any) => {
+  // return (day: any) => {
+  // console.log('day', day, singinData.value)
     if (singinData.value.includes(dateUtil.formatDate(day.date))) {
       // day.className = 'success-label'
       day.bottomInfo = '1'
@@ -52,25 +75,11 @@ const formatter = computed(() => {
     } else {
       day.bottomInfo = '0'
     }
-    // console.log(day, dateUtil.formatDate(day.date))
-    // day.bottomInfo = '0'
-    // day.className = 'rt-1'
-    return day;
-  };
-});
-const currentDate = computed(() => {
-  return dateUtil.formatDate(new Date(), 'YYYY-MM');
-});
-const slectSinginData = ref()
-const selectedDate = ref(dateUtil.formatDate(new Date(), 'YYYY-MM-DD'))
-// setTimeout(() => {
-//   singinData.value = ['2025-12-01', '2025-12-03', '2025-12-05', '2025-12-06', '2025-12-07', '2025-12-08'];
-//   unSigninData.value = ['2025-12-02', '2025-12-04', '2025-12-09'];
-// }, 1000);
-const loading = ref(false)
-const list = ref([])
+  return day;
+  // };
+}
 const getAttendanceList = async (date: string = currentDate.value) => {
-  loading.value = true
+  // loading.value = true
   const params = {
     attendanceMonth: date,
     // attendanceMonth: '2025-12',
@@ -80,25 +89,104 @@ const getAttendanceList = async (date: string = currentDate.value) => {
   }
   const res = await Allowance.getAttendanceInfoList(params)
   console.log('getAttendanceList', res)
-  loading.value = false
+  // loading.value = false
   list.value = res.data?.records || []
+  // const arr = cloneDeep(list.value)
+  // console.log('singinData', list.value.filter((item: any) => item.status === '1').map((item: any) => item.attendanceDate))
   singinData.value = list.value.filter((item: any) => item.status === '1').map((item: any) => item.attendanceDate)
   unSigninData.value = list.value.filter((item: any) => item.status === '2').map((item: any) => item.attendanceDate)
-  slectSinginData.value = list.value.find((item: any) => item.attendanceDate === dateUtil.formatDate(date, 'YYYY-MM-DD')) || {}
+  slectSinginData.value = selectedDate.value ? list.value.find((item: any) => item.attendanceDate === selectedDate.value?.info) || {} : {}
+  setAttendanceForDay({
+    singinNum: singinData.value?.length || 0,
+    unSigninMum: unSigninData.value?.length || 0,
+    slectSinginData: slectSinginData.value || {},
+    selectedDate: selectedDate.value?.info,
+  })
 }
 const onChangeDate = ({ date }: any) => {
-  console.log('onChangeDate', date, dateUtil.formatDate(date, 'YYYY-MM'))
+  console.log('onChangeDate', date, dateUtil.formatDate(date, 'YYYY-MM'), dateUtil.formatDate(date, 'YYYY-MM-DD'))
   const formatDate = dateUtil.formatDate(date, 'YYYY-MM')
-  getAttendanceList(formatDate)
+  // selectedDate.value = formatDate === currentDate.value ? dateUtil.formatDate(date, 'YYYY-MM-DD') : ''
+  selectedDate.value = {
+    info: dateUtil.formatDate(date, 'YYYY-MM-DD'),
+    data: date,
+  }
+  if (active.value === 1) {
+    getAttendanceList(formatDate)
+  } else if (active.value === 2) {
+    getAllowanceList(formatDate)
+  }
 }
 const onSelectDate = (value : any) => {
   console.log('onSelectDate', value, dateUtil.formatDate(value, 'YYYY-MM-DD'))
   const formatDate = dateUtil.formatDate(value, 'YYYY-MM-DD')
-  selectedDate.value = formatDate
-  slectSinginData.value = list.value.find((item: any) => item.attendanceDate === formatDate) || {}
+  selectedDate.value = {
+    info: formatDate,
+    data: value,
+  }
+  if (active.value === 1) {
+    slectSinginData.value = list.value.find((item: any) => item.attendanceDate === formatDate) || {}
+    setAttendanceForDay({
+      singinNum: singinData.value?.length || 0,
+      unSigninMum: unSigninData.value?.length || 0,
+      slectSinginData: slectSinginData.value || {},
+      selectedDate: selectedDate.value?.info,
+    })
+  } else if (active.value === 2) {
+    slectSinginData.value = allowanceGroupByDate.value[formatDate] || {}
+    setAllowanceForDay({
+      allowanceDays: Object.keys(allowanceGroupByDate)?.length || 0,
+      allowanceTotal: allowanceTotal.value || 0,
+      slectSinginData: slectSinginData.value || {},
+      selectedDate: selectedDate.value?.info,
+    })
+  }
 }
+
+const getAllowanceList = async (date: string = currentDate.value) => {
+  const params = {
+    allowanceMonth:date
+  }
+  const res = await Allowance.getAllowanceInfoList(params)
+  console.log('getAllowanceInfoList', res)
+  allowanceList.value = res.data || []
+  allowanceGroupByDate.value = groupBy(allowanceList.value, 'date')
+  allowanceTotal.value = sumBy(allowanceList.value, (item: any) => item.amount)
+  singinData.value = allowanceList.value.map((item: any) => item.date)
+  // singinData.value = allowanceList.value.map((item: any) => item.date)
+  unSigninData.value = []
+  // unSigninData.value = allowanceList.value.filter((item: any) => item.status === '2').map((item: any) => item.attendanceDate)
+  slectSinginData.value = allowanceGroupByDate.value[selectedDate.value?.info] || {}
+  // slectSinginData.value = allowanceList.value.find((item: any) => item.date === dateUtil.formatDate(date, 'YYYY-MM-DD')) || {}
+  console.log('Allowance singinData.value', slectSinginData.value)
+  console.log('Allowance slectSinginData.value', slectSinginData.value)
+  setAllowanceForDay({
+    allowanceDays: Object.keys(allowanceGroupByDate)?.length || 0,
+    allowanceTotal: allowanceTotal.value || 0,
+    slectSinginData: slectSinginData.value || {},
+    selectedDate: selectedDate.value?.info || '',
+  })
+}
+
+watch(() => active.value, (newVal : number) => {
+  selectedDate.value = {
+    info: dateUtil.formatDate(new Date(), 'YYYY-MM-DD'),
+    data: new Date()
+  }
+  // if (calendarRef.value) {
+  //   // calendarRef.value.reset(new Date())
+  // }
+
+  if (newVal === 1) {
+    getAttendanceList()
+  } else if (newVal === 2) {
+    getAllowanceList()
+  }
+  // getAttendanceList(newVal)
+  // getAllowanceList(newVal)
+}, { immediate: true })
 onMounted(() => {
-  getAttendanceList()
+  // getAttendanceList()
 })
 </script>
 

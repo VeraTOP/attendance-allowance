@@ -17,6 +17,25 @@ export class Allowance {
    * 获取待办考勤
    */
   static getListConfirmable = (params: any) => {
-    return api.get('/kqbz/attendanceUserConfirm/listConfirmable', params)
+    return api.get('/kqbz/attendanceConfirm/listConfirmable', params)
   }
+  /**
+   * 获取补助列表
+   */
+  static getAllowanceInfoList = (params: any) => {
+    return api.get('/kqbz/allowanceInfo/listMyAllowanceDetailByMonth', params)
+  }
+  /**
+   * 确认考勤补助
+   */
+  static confirmAllowance = (data: any) => {
+    return api.post('/kqbz/attendanceConfirm/confirm', data)
+  }
+  /**
+   * 获取补助-按类型
+   */
+  static getAllowanceSummary = (params: any) => {
+    return api.get('/kqbz/allowanceInfo/listMyAllowanceSummaryByMonth', params)
+  }
+
 }

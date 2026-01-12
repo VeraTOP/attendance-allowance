@@ -38,15 +38,21 @@ const props = defineProps({
   }
 })
 const confirmData = computed(() => props.data)
-const data = ref({
-  title: t('attendanceConfirmation'),
-  describe: t('toBeDoneDescription', {
-    YearMonth: dateUtil.format(confirmData.value?.currentMonth, locale.value === 'zh-CN' ? 'YYYY年MM月' : 'YYYY-MM'),
+const data = computed(() => {
+  const currentMonthArr = confirmData.value?.currentMonth?.split('-') || []
+  const title = t('attendanceConfirmation')
+  const describe = t('toBeDoneDescription', {
+    YearMonth: locale.value === 'zh-CN' ? currentMonthArr[0] + '年' + currentMonthArr[1] + '月' : currentMonthArr[1] + '/' + currentMonthArr[0],
+    // YearMonth: dateUtil.format(confirmData.value?.currentMonth + '-01', locale.value === 'zh-CN' ? 'YYYY年MM月' : 'YYYY-MM'),
     EndDate: dateUtil.format(confirmData.value?.startDate, locale.value === 'zh-CN' ? 'YYYY年MM月DD日' : 'YYYY-MM-DD')
-  }),
-  // describe: dateUtil.format(confirmData.value?.currentMonth, 'YYYY年MM月') + '考勤数据已生成，请在' + dateUtil.format(confirmData.value?.startDate, 'YYYY年MM月DD日') + '之前确认',
-  // status: '待确认'
+  })
+  return {
+    title,
+    describe
+  }
 })
+  // describe: dateUtil.format(confirmData.value?.currentMonth, 'YYYY年MM月') + '考勤数据已生成，请在' + dateUtil.format(confirmData.value?.startDate, 'YYYY年MM月DD日') + '之前确认',
+  // status: '待确认')
 
 const handleClick = () => {
   // console.log('点击了立即查看')

@@ -31,8 +31,16 @@ import cash from '@/assets/images/icon/cash.svg'
 import { dateUtil } from '@/assets/scripts/date-util'
 
 // 模拟数据
-const days = ref(22)
-const number = ref(1)
+// const days = ref(22)
+// const number = ref(1)
+const props = defineProps({
+  data: {
+    type: Object,
+    default: () => ({})
+  }
+})
+const days = computed(() => props.data.attendanceLen)
+const number = computed(() => props.data.confirmDataLen)
 // const updateDate = ref('2025-12-27 10:30:00')
 
 // 使用日期工具格式化日期
@@ -40,9 +48,9 @@ const currentDate = computed(() => {
   return dateUtil.formatDate(new Date(), 'YYYY.MM')
 })
 // 计算进度百分比
-const progressNum = computed(() => {
-  return days.value / daysInCurrentMonth.value * 100
-})
+// const progressNum = computed(() => {
+//   return days.value / daysInCurrentMonth.value * 100
+// })
 // 使用新增的获取月份总天数功能
 const daysInCurrentMonth = computed(() => {
   return dateUtil.getDaysInCurrentMonth()
