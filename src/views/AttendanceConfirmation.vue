@@ -10,19 +10,19 @@
         //- span
           van-icon(name="play" size="12" color="var(--van-blue)" class="rotate-90")
   van-row(gutter="16")
-    van-col(class="" span="8")
+    van-col(class="" span="12")
       div(class="text-center bg-white rounded-3xl overflow-hidden px-2 py-4 relative shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-blue-50 ")
         van-icon(name="fire-o" size="24" color="var(--van-blue)")
         div(class="mt-2")
           p(class="text-xl font-bold text-slate-850 tracking-tight") {{days}}
           p(class="text-xs text-slate-400 mt-1") {{t('continuousAttendance')}}({{t('attendanceDaysUnit')}})
-    van-col(class="" span="8")
+    van-col(class="" span="12")
       div(class="text-center bg-white rounded-3xl overflow-hidden px-2 py-4 relative shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-blue-50")
         van-icon(name="notes-o" size="24" color="var(--van-blue)")
         div(class="mt-2")
           p(class="text-xl font-bold text-slate-850 tracking-tight") {{attendanceList.length}}
           p(class="text-xs text-slate-400 mt-1") {{t('attendanceDays')}}
-    van-col(class="" span="8")
+    //- van-col(class="" span="8")
       div(class="text-center bg-white rounded-3xl overflow-hidden px-2 py-4 relative shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-blue-50")
         van-icon(name="gold-coin-o" size="24" color="var(--van-blue)")
         div(class="mt-2")
@@ -32,7 +32,7 @@
   div(class="fixed bottom-0 left-0 right-0 px-6 py-5 bg-white van-hairline--top-bottom van-safe-area-bottom border-t border-slate-200/60")
     van-checkbox(class="mr-2 mb-4" shape="square" v-model="isChecked")
       span(class="text-sm font-medium text-slate-500 dark:text-slate-400") {{t('confirmDescription')}}
-    van-button(class="rounded-xl bg-primary-gradient shadow-lg shadow-sky-500/30" type="primary" size="large" :disabled="!isChecked" @click="confirm")
+    van-button(class="rounded-xl bg-primary-gradient shadow-lg shadow-sky-500/30" type="primary" size="large" :disabled="!isChecked" :loading="loading" @click="confirm")
       span(class="text-[17px]") {{t('confirmAttendance')}}
       van-icon(name="passed" size="20" class="ml-2 relative top-[2px]")
   //- van-popup(v-model:show="isPicker" position="bottom")
@@ -109,28 +109,35 @@ const getAllowanceList = async (date: string) => {
   // console.log('Allowance singinData.value', slectSinginData.value)
   // console.log('Allowance slectSinginData.value', slectSinginData.value)
 }
-
+const loading = ref(false)
 const confirm = async () => {
   const params = {
     attendanceMonth: confirmData.value?.currentMonth,
     // ...confirmData.value
   }
-  const res: any = await Allowance.confirmAllowance(params)
-  console.log('confirmAllowance', res)
-  if (res.code === 0) {
+  try {
+    loading.value = true
+    const res: any = await Allowance.confirmAllowance(params)
+    console.log('confirmAllowance', res)
+    loading.value = false
+    if (res.code === 0) {
+      showToast({
+        message: res?.msg || t('confirmSuccess'),
+        onClose: () => {
+          router.back()
+        }
+      })
+    } else {
+      showToast({
+        message: res?.msg || t('confirmFailed'),
+      })
+    }
+
+  } catch (error: any) {
+    loading.value = false
+    console.log('confirmAllowance error', error)
     showToast({
-      message: res?.msg || t('confirmSuccess'),
-      onClose: () => {
-        router.back()
-      }
-    })
-    // getConfirmData()
-  } else {
-    showToast({
-      message: res?.msg || t('confirmFailed'),
-      onClose: () => {
-        router.back()
-      }
+      message: error.msg || t('confirmFailed'),
     })
   }
 }

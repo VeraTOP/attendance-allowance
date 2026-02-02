@@ -2,15 +2,15 @@
   div
     //- p {{data}}
     van-row(:gutter="16")
-      van-col(span="12")
+      //- van-col(span="12")
         div(class="p-4 rounded-3xl bg-gradient-to-br from-white to-blue-50/30 border border-slate-100 shadow-card flex flex-col gap-3 group")
-          div(class="flex items-center gap-2")
+          //- div(class="flex items-center gap-2")
             van-icon(name="gold-coin-o" class="text-[--van-blue]" size="18")
             span(class="text-xs font-bold text-slate-400") {{t('allowanceAmount')}}
           div
             span(class="text-2xl font-bold text-slate-800 tracking-tight") {{utils.formatCurrency(data.allowanceTotal || 0)}}
             span(class="text-xs font-medium text-slate-400 ml-1.5") {{t('RMB')}}
-      van-col(span="12")
+      van-col(span="24")
         div(class="p-4 rounded-3xl bg-gradient-to-br from-white to-blue-50/30 border border-slate-100 shadow-card flex flex-col gap-3 group")
           div(class="flex items-center gap-2")
             van-icon(name="notes-o" color="#0d9488" size="18")

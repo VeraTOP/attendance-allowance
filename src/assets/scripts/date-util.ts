@@ -235,8 +235,9 @@ export const dateUtil = {
     const dayjsDate = dayjs(date)
 
     if (type === 'number') {
-      // 返回阿拉伯数字，1-7，周日为1
-      return dayjsDate.day() || 7
+      // 返回阿拉伯数字，0-6，周日为0
+      // console.log('date',date, dayjsDate.day())
+      return dayjsDate.day()
     } else {
       // 返回中文大写
       const days = format === 'full'
