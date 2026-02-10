@@ -39,7 +39,7 @@ const getConfirmData = async () => {
   }
   const res = await Allowance.getListConfirmable(params)
   console.log('getConfirmData', res)
-  confirmDataLen.value = res.data?.length || 0
+  confirmDataLen.value = res.data?.filter((item: any) => !item.confirm).length || 0
 }
 onMounted(() => {
   getAttendanceList()

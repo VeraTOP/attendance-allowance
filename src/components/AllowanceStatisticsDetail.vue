@@ -2,15 +2,15 @@
   div
     //- p {{data}}
     van-row(:gutter="16")
-      //- van-col(span="12")
+      van-col(span="12")
         div(class="p-4 rounded-3xl bg-gradient-to-br from-white to-blue-50/30 border border-slate-100 shadow-card flex flex-col gap-3 group")
-          //- div(class="flex items-center gap-2")
+          div(class="flex items-center gap-2")
             van-icon(name="gold-coin-o" class="text-[--van-blue]" size="18")
             span(class="text-xs font-bold text-slate-400") {{t('allowanceAmount')}}
           div
             span(class="text-2xl font-bold text-slate-800 tracking-tight") {{utils.formatCurrency(data.allowanceTotal || 0)}}
             span(class="text-xs font-medium text-slate-400 ml-1.5") {{t('RMB')}}
-      van-col(span="24")
+      van-col(span="12")
         div(class="p-4 rounded-3xl bg-gradient-to-br from-white to-blue-50/30 border border-slate-100 shadow-card flex flex-col gap-3 group")
           div(class="flex items-center gap-2")
             van-icon(name="notes-o" color="#0d9488" size="18")
@@ -35,7 +35,7 @@
               div(class="flex gap-5")
                 div(class="flex flex-col items-center")
                   div(class="size-12 rounded-2xl bg-[var(--van-blue-lightest)] flex items-center justify-center")
-                    van-image(:src="dning" width="24" height="24")
+                    van-image(:src="typeIconList[item.typeId] || 'subsidy'" width="24" height="24")
                 div
                   div(class="flex items-baseline gap-2.5")
                     span(class="text-sm font-semibold text-slate-900") {{item.typeName}}
@@ -64,6 +64,8 @@ import { dateUtil } from '@/assets/scripts/date-util'
 import { utils } from '@/assets/scripts/utils'
 import traffic from '@/assets/images/icon/traffic.svg'
 import dning from '@/assets/images/icon/dning.svg'
+import subsidy from '@/assets/images/icon/subsidy.svg'
+import fullAttendance from '@/assets/images/icon/full-attendance.svg'
 import { isEmpty } from 'lodash'
 import { useI18n } from '@/i18n'
 import { useStatisticsStore } from '@/stores/statistics'
@@ -81,7 +83,12 @@ const { t, locale } = useI18n()
 //     }),
 //   },
 // })
-
+const typeIconList = ref({
+  '1': subsidy,
+  '2': traffic,
+  '3': fullAttendance,
+  '4': dning,
+})
 const data = computed(() => {
   return statisticsStore.allowanceForDay || {}
 })

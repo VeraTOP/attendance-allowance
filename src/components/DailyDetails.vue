@@ -10,8 +10,8 @@
   div(v-for="item in list" :key="item.id" class="mb-3 relative p-4 rounded-2xl bg-white shadow-[0_2px_8px_rgba(0,0,0,0.02)] border border-slate-100")
     van-row(class="mb-4" :gutter="24")
       van-col(:span="18")
-        span(class="text-[17px] font-bold text-slate-800 dark:text-white tracking-tight mr-2") {{dateUtil.format(item.attendanceDate, locale === 'zh-CN' ? 'MM月DD日' : 'DD/MM')}}
-        span(class="text-xs font-medium text-slate-400 dark:text-slate-500") {{t('dayOfWeek['+ [dateUtil.getDayOfWeek(item.attendanceDate, {type: 'number'})] + ']')}}
+        span(v-if="item.attendanceDate" class="text-[17px] font-bold text-slate-800 dark:text-white tracking-tight mr-2") {{dateUtil.format(item.attendanceDate, locale === 'zh-CN' ? 'MM月DD日' : 'DD/MM')}}
+        span(v-if="item.attendanceDate" class="text-xs font-medium text-slate-400 dark:text-slate-500") {{t('dayOfWeek['+ [dateUtil.getDayOfWeek(item.attendanceDate, {type: 'number'})] + ']')}}
       van-col(:span="6")
         div(class="flex justify-end")
           span(:class="['rounded-full', item.status === '1' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-500/20' : 'bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-100 dark:border-orange-500/20', 'px-2.5', 'py-0.5', 'text-[11px]', 'font-bold', 'border']")
@@ -20,13 +20,21 @@
       van-col(:span="12")
         div(class="flex items-center justify-between ")
           div
-            p(class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold") {{t('attendanceSignIn')}}
-            p(class="text-base font-bold font-mono text-slate-700 dark:text-slate-200") {{dateUtil.formatTime(item.attendanceStartDatetime, 'HH:mm')}}
+            template(v-if="item.attendanceStartDatetime")
+              p(class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold") {{t('attendanceSignIn')}}
+              p( class="text-base font-bold font-mono text-slate-700 dark:text-slate-200") {{dateUtil.formatTime(item.attendanceStartDatetime, 'HH:mm')}}
+            template(v-else)
+              p(class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold") {{t('notSignedIn')}}
+              p(class="text-base font-bold font-mono text-slate-400 dark:text-slate-200") --:--
           div
-            p(class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold") {{t('attendanceSignOut')}}
-            p(class="text-base font-bold font-mono text-slate-700 dark:text-slate-200") {{dateUtil.formatTime(item.attendanceEndDatetime, 'HH:mm')}}
+            template(v-if="item.attendanceEndDatetime")
+              p(class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold") {{t('attendanceSignOut')}}
+              p(class="text-base font-bold font-mono text-slate-700 dark:text-slate-200") {{dateUtil.formatTime(item.attendanceEndDatetime, 'HH:mm')}}
+            template(v-else)
+              p(class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold") {{t('notSignedOut')}}
+              p(class="text-base font-bold font-mono text-slate-400 dark:text-slate-200") --:--
       van-col(:span="12")
-        div(class="flex justify-end")
+        div(class="flex justify-end"  v-if="item.attendanceStartDatetime && item.attendanceEndDatetime")
           span(class="text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 px-2.5 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700") {{dateUtil.calculateDuration(item.attendanceStartDatetime, item.attendanceEndDatetime, {unit: 'hours'})}}h
       //- van-col(:span="6")
       //-   div(v-if="item.status == '1'" class="flex items-center justify-center rounded-2xl bg-green-50 text-green-600 w-12 h-12 shadow-sm border border-green-100/50")

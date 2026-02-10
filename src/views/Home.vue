@@ -14,7 +14,7 @@ import UserInfo from '@/components/UserInfo.vue'
 import TotalData from '@/components/TotalData.vue'
 import ToBeDone from '@/components/ToBeDone.vue'
 import AttendanceList from '@/components/AttendanceList.vue'
-
+import { isEmpty } from 'lodash'
 import { dateUtil } from '@/assets/scripts/date-util'
 import { Allowance } from '@/api'
 
@@ -44,7 +44,7 @@ const getConfirmData = async () => {
   }
   const res = await Allowance.getListConfirmable(params)
   console.log('getConfirmData', res)
-  confirmData.value = res.data?.[0]
+  confirmData.value = res.data?.filter((item: any) => !item.confirm)[0] || {}
 }
 
 const allowanceList = ref([])

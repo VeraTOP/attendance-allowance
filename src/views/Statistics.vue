@@ -1,7 +1,7 @@
 <template lang="pug">
 #Statistics
   div(class="mx-10 py-3")
-    //- p --{{selectedDate}}
+    //- p --{{singinData}}
     van-tabs(van-tabs v-model:active="active" type="card")
       van-tab(:title="t('attendanceCalendar')" :name="1")
       van-tab(:title="t('allowanceCalendar')" :name="2")
@@ -93,8 +93,8 @@ const getAttendanceList = async (date: string = currentDate.value) => {
   list.value = res.data?.records || []
   // const arr = cloneDeep(list.value)
   // console.log('singinData', list.value.filter((item: any) => item.status === '1').map((item: any) => item.attendanceDate))
-  singinData.value = list.value.filter((item: any) => item.status === '1').map((item: any) => item.attendanceDate)
-  unSigninData.value = list.value.filter((item: any) => item.status === '2').map((item: any) => item.attendanceDate)
+  singinData.value = list.value.filter((item: any) => item.status === 1).map((item: any) => item.attendanceDate)
+  unSigninData.value = list.value.filter((item: any) => item.status === 2).map((item: any) => item.attendanceDate)
   slectSinginData.value = selectedDate.value ? list.value.find((item: any) => item.attendanceDate === selectedDate.value?.info) || {} : {}
   setAttendanceForDay({
     singinNum: singinData.value?.length || 0,
@@ -135,7 +135,7 @@ const onSelectDate = (value : any) => {
   } else if (active.value === 2) {
     slectSinginData.value = allowanceGroupByDate.value[formatDate] || {}
     setAllowanceForDay({
-      allowanceDays: Object.keys(allowanceGroupByDate)?.length || 0,
+      allowanceDays: Object.keys(allowanceGroupByDate.value)?.length || 0,
       allowanceTotal: allowanceTotal.value || 0,
       slectSinginData: slectSinginData.value || {},
       selectedDate: selectedDate.value?.info,
@@ -160,8 +160,9 @@ const getAllowanceList = async (date: string = currentDate.value) => {
   // slectSinginData.value = allowanceList.value.find((item: any) => item.date === dateUtil.formatDate(date, 'YYYY-MM-DD')) || {}
   console.log('Allowance singinData.value', slectSinginData.value)
   console.log('Allowance slectSinginData.value', slectSinginData.value)
+  console.log('Allowance allowanceGroupByDate.value', allowanceGroupByDate.value)
   setAllowanceForDay({
-    allowanceDays: Object.keys(allowanceGroupByDate)?.length || 0,
+    allowanceDays: Object.keys(allowanceGroupByDate.value)?.length || 0,
     allowanceTotal: allowanceTotal.value || 0,
     slectSinginData: slectSinginData.value || {},
     selectedDate: selectedDate.value?.info || '',

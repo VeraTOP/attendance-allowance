@@ -1,4 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios'
+import { showLoadingToast, closeToast } from 'vant';
+
 // import { useUserStore } from '@/stores/user'
 // const userStore = useUserStore()
 import { address } from '../../address'
@@ -9,7 +11,7 @@ const { baseURL } = address
  */
 export interface ApiResponse<T = any> {
   code: number
-  message: string
+  msg: string
   data: T
 }
 
@@ -34,7 +36,7 @@ export class ApiService {
   constructor() {
     // 创建axios实例
     this.instance = axios.create({
-      baseURL: process.env.NODE_ENV === 'development' ? baseURL : window.location.origin,
+      baseURL: process.env.NODE_ENV === 'development' ? baseURL : window.location.origin + '/api',
       timeout: 10000,
       headers: {
         // 不硬编码Content-Type，让具体请求方法根据数据类型动态设置
@@ -63,8 +65,8 @@ export class ApiService {
         // 根据业务逻辑处理响应
         if (res.code !== 0) {
           // 可以在这里添加全局错误提示
-          console.error('API Error:', res.message)
-          return Promise.reject(new Error(res.message || 'Error'))
+          console.error('API Error:', res?.msg)
+          return Promise.reject(res)
         }
         return response
       },
@@ -87,16 +89,23 @@ export class ApiService {
     try {
       if (options?.showLoading) {
         // 可以在这里添加加载状态
-        console.log('Loading...')
+        // console.log('Loading...')
+        // showLoading()
+        showLoadingToast({
+          message: '',
+          duration: 0
+        })
       }
       const response = await this.instance.get<ApiResponse<T>>(url, {
         params
       })
+      closeToast()
       return response.data
     } catch (error) {
       if (options?.handleError) {
         options.errorHandler?.(error as AxiosError)
       }
+      closeToast()
       throw error
     }
   }

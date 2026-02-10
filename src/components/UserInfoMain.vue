@@ -1,11 +1,11 @@
 <template lang="pug">
   //- #UserInfo(class="px-6 pt-8")
-  div#UserInfoMain(class="relative pt-10 pb-8 px-6 flex flex-col items-center")
+  div#UserInfoMain(class="relative pt-6 pb-8 px-6 flex flex-col items-center")
     div(class="relative group")
       div(class="h-24 w-24 rounded-full overflow-hidden border-[3px] border-white dark:border-[#1e293b] shadow-xl shadow-blue-500/20 bg-center bg-cover z-10 relative")
-        van-image(:src="userinfo?.sex === 1 ? maleAvatar : femaleAvatar" fit="cover" )
-      div(class="absolute bottom-1 right-1 h-6 w-6 rounded-full bg-green-500 border-[3px] border-white dark:border-[#1e293b] z-20 shadow-sm")
-    div(class="mt-5 text-center relative z-10")
+        van-image(:src="logoIcon" fit="cover" )
+      //- div(class="absolute bottom-1 right-1 h-6 w-6 rounded-full bg-green-500 border-[3px] border-white dark:border-[#1e293b] z-20 shadow-sm")
+    div(class="mt-5 text-center relative z-10" )
       h1(class="text-2xl font-bold text-slate-900 dark:text-white leading-tight tracking-tight") {{userinfo?.name}}
       //- p(class="text-sm text-slate-500 dark:text-slate-400 mt-1.5 font-medium") 欢迎回来，祝您工作愉快
       div(class="mt-4 inline-flex items-center gap-1.5 px-4 py-1.5 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-full shadow-sm border border-blue-100 dark:border-slate-700")
@@ -20,6 +20,7 @@ import { useI18n } from '@/i18n'
 import { useUserStore } from '@/stores/user'
 import femaleAvatar from '@/assets/images/female.svg'
 import maleAvatar from '@/assets/images/male.svg'
+import logoIcon from '@/assets/images/logo-icon.png'
 
 // import { Button as VanButton, Image as VanImage } from 'vant'
 

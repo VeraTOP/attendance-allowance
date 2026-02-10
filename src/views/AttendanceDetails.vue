@@ -14,6 +14,7 @@
   div(class="px-4")
     template(v-if="!isEmpty(list)" v-for="item in list" :key="item.id")
       AttendanceItem(:data="item")
+      //- p {{item}}
     div(v-else)
       van-empty(class="p-0 mb-6" :description="t('noAttendanceDetail')" image-size="8rem")
   van-popup(v-model:show="isPicker" position="bottom")

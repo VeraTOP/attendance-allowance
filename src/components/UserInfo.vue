@@ -1,15 +1,17 @@
 <template lang="pug">
-  #UserInfo(class="px-6 pt-8")
-    div(class="flex justify-between items-center")
-      div(class="text-white")
+  #UserInfo(class="px-6 pt-6")
+    div(class="flex justify-between")
+      div()
+        van-image(:src="logo" fit="cover" class="w-[200px]")
+      div(class="text-white text-right ml-1")
         p(class="text-sm")
           span(class="mr-1 opacity-80") {{t('welcomeBack')}}
           span(class="inline-block w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse relative top-[-2px]")
-        p(class="text-[2rem] font-bold ") {{userinfo?.name}}
+        p(class="text-[1.5rem] font-bold ") {{userinfo?.name}}
         p(class="flex items-center gap-1.5 mt-2 text-blue-50/90 bg-white/10 w-fit px-3 py-1.5 rounded-full text-xs font-medium backdrop-blur-md border border-white/10 shadow-sm transition-transform")
           van-icon(name="label-o")
           span {{userinfo?.dept?.name}}
-      div()
+      //- div()
         div(class="w-14 h-14 rounded-full overflow-hidden border-2 border-white/40 bg-white/10 backdrop-blur-md overflow-hidden shadow-lg ring-2 ring-white/10 ring-offset-2 ring-offset-[#189bdc]")
           van-image(:src="userinfo?.sex === 1 ? maleAvatar : femaleAvatar" fit="cover" )
 </template>
@@ -19,6 +21,7 @@ import { useI18n } from '@/i18n'
 import { useUserStore } from '@/stores/user'
 import femaleAvatar from '@/assets/images/female.svg'
 import maleAvatar from '@/assets/images/male.svg'
+import logo from '@/assets/images/logo.png'
 
 // import { Button as VanButton, Image as VanImage } from 'vant'
 

@@ -1,6 +1,8 @@
 <template lang="pug">
 #ToBeDone(class="px-5 mt-6")
-  p(class="px-1 text-[17px] font-bold text-slate-800 tracking-tight flex items-center gap-2") {{t('toBeDone')}}
+  //- p {{confirmData}}
+  p(class="px-1 text-[17px] font-bold text-slate-800 tracking-tight flex items-center gap-2")
+    span(v-if="!isEmpty(data)") {{t('toBeDone')}}
     span(v-if="!isEmpty(data)" class="flex h-2 w-2 relative")
       span(class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75")
       span(class="relative inline-flex rounded-full h-2 w-2 bg-red-500")
@@ -16,7 +18,7 @@
         //- p(class="text-[15px] text-slate-500 tracking-tight") {{data.status}}
     van-button(class="w-full mt-4" type="primary" class="rounded-xl" @click="handleClick") {{t('viewNow')}}
       van-icon(name="arrow" class="ml-1")
-  div(v-else)
+  //- div(v-else)
     van-empty(class="p-0" image="search" description="暂无待办任务" image-size="8rem")
     // p(class="text-[15px] text-slate-500 tracking-tight") 暂无待办任务
 </template>
@@ -46,10 +48,10 @@ const data = computed(() => {
     // YearMonth: dateUtil.format(confirmData.value?.currentMonth + '-01', locale.value === 'zh-CN' ? 'YYYY年MM月' : 'YYYY-MM'),
     EndDate: dateUtil.format(confirmData.value?.startDate, locale.value === 'zh-CN' ? 'YYYY年MM月DD日' : 'YYYY-MM-DD')
   })
-  return {
+  return !isEmpty(confirmData.value) ? {
     title,
     describe
-  }
+  } : {}
 })
   // describe: dateUtil.format(confirmData.value?.currentMonth, 'YYYY年MM月') + '考勤数据已生成，请在' + dateUtil.format(confirmData.value?.startDate, 'YYYY年MM月DD日') + '之前确认',
   // status: '待确认')

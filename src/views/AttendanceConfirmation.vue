@@ -30,11 +30,16 @@
           p(class="text-xs text-slate-400 mt-1") {{t('allowanceAmount')}}
   DailyDetails(class="mt-6 mb-36" :data="attendanceList")
   div(class="fixed bottom-0 left-0 right-0 px-6 py-5 bg-white van-hairline--top-bottom van-safe-area-bottom border-t border-slate-200/60")
-    van-checkbox(class="mr-2 mb-4" shape="square" v-model="isChecked")
-      span(class="text-sm font-medium text-slate-500 dark:text-slate-400") {{t('confirmDescription')}}
-    van-button(class="rounded-xl bg-primary-gradient shadow-lg shadow-sky-500/30" type="primary" size="large" :disabled="!isChecked" :loading="loading" @click="confirm")
-      span(class="text-[17px]") {{t('confirmAttendance')}}
-      van-icon(name="passed" size="20" class="ml-2 relative top-[2px]")
+    template(v-if="!confirmData?.confirm")
+      van-checkbox(class="mr-2 mb-4" shape="square" v-model="isChecked")
+        span(class="text-sm font-medium text-slate-500 dark:text-slate-400") {{t('confirmDescription')}}
+      van-button(class="rounded-xl bg-primary-gradient shadow-lg shadow-sky-500/30" type="primary" size="large" :disabled="!isChecked" :loading="loading" @click="confirm")
+        span(class="text-[17px]") {{t('confirmAttendance')}}
+        van-icon(name="passed" size="20" class="ml-2 relative top-[2px]")
+    template(v-else)
+      p(class="text-center text-base text-green-600 dark:text-slate-400")
+        van-icon(name="passed" size="22" class="inline-block mr-2 relative top-[2px]")
+        span {{t('attendanceConfirmed')}}
   //- van-popup(v-model:show="isPicker" position="bottom")
     van-date-picker(v-model="dateValue" title="选择年月" :max-date="new Date()" :columns-type="columnsType" @confirm="handleConfirm")
 </template>
