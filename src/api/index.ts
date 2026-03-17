@@ -26,6 +26,12 @@ export class Allowance {
     return api.get('/kqbz/allowanceInfo/listMyAllowanceDetailByMonth', params, {showLoading: true})
   }
   /**
+   * 获取最新月份的补助信息
+   */
+  static getLatestMonthAllowance = () => {
+    return api.get('/kqbz/allowanceInfo/listMyLatestMonthAllowanceDetail',null, {showLoading: true})
+  }
+  /**
    * 确认考勤补助
    */
   static confirmAllowance = (data: any) => {
@@ -44,5 +50,18 @@ export class Allowance {
    */
   static getAllowanceDetailByMonth = (params: any) => {
     return api.get('/kqbz/allowanceInfo/listMyAllowanceDetailByMonth', params, {showLoading: true})
+  }
+
+  /**
+   * 确认考勤往返信息
+   */
+  static confirmAttendanceItem = (data: any) => {
+    return api.post('/kqbz/attendanceConfirm/confirmItem', data)
+  }
+  /**
+   * 获取确认考勤往返信息摘要
+   */
+  static getAttendanceConfirmSummary = (params: any) => {
+    return api.get('/kqbz/attendanceConfirm/myAttendanceConfirmSummary', params, {showLoading: true})
   }
 }

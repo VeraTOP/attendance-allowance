@@ -6,7 +6,7 @@
         div(class="p-4 rounded-3xl bg-gradient-to-br from-white to-blue-50/30 border border-slate-100 shadow-card flex flex-col gap-3 group")
           div(class="flex items-center gap-2")
             van-icon(name="gold-coin-o" class="text-[--van-blue]" size="18")
-            span(class="text-xs font-bold text-slate-400") {{t('allowanceAmount')}}
+            span(class="text-xs font-bold text-slate-400") {{t('allowanceAmount', {month: dateUtil.formatDate(data.selectedDate, locale === 'zh-CN' ? 'YYYY年MM月' : 'MM/YYYY')})}}
           div
             span(class="text-2xl font-bold text-slate-800 tracking-tight") {{utils.formatCurrency(data.allowanceTotal || 0)}}
             span(class="text-xs font-medium text-slate-400 ml-1.5") {{t('RMB')}}

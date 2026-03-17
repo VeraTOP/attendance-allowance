@@ -67,5 +67,13 @@
   "noAllowanceDetail": "No Allowance Detail",
   "allTypes": "All Types",
   "sortByTime": "Sort by Time",
-  "attendanceConfirmed": "Attendance Confirmed"
+  "attendanceConfirmed": "Attendance Confirmed",
+  "whetherRoundTrip": "Whether Round Trip",
+  "reason": "Reason",
+  "pleaseEnterReason": "Please enter reason",
+  "confirm": "Confirm",
+  "roundTripReason": "Round Trip Reason",
+  "revokeAttendance": "Cancel Confirmation",
+  "markRoundTrip": "Mark Round Trip",
+  "roundTrip": "Round Trip"
 }

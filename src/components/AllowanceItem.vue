@@ -13,12 +13,14 @@
           img(:src="traffic" width="24" height="24" )
     van-col(:span="10")
       div(class="font-bold text-slate-800 text-[15px]") {{item.typeName}}
-      div(class="font-medium text-slate-400 mt-2 text-xs") {{item.date}}
+      div(class="font-medium text-slate-400 mt-3 text-sm") {{item.date}}
     van-col(:span="9")
       div(class="font-bold text-slate-800 text-[17px] text-right")
         span(class="text-sm mr-1") ¥
         span {{utils.formatCurrency(item.amount || 0)}}
       div(class="mt-1 float-right")
+        span(class="text-slate-400 mt-2 text-sm") {{item.deptName}}
+      //- div(class="mt-1 float-right")
         span(v-if="item.status === 1" class="rounded-md bg-emerald-50 px-2 py-1 text-emerald-600 text-xs") {{t('allowanceGranted')}}
         span(v-else-if="item.status === 2" class="rounded-md bg-amber-50 px-2 py-1 text-amber-600 text-xs") {{t('allowancePending')}}
         //- div() {{item.status === 1 ? '已发放' : item.status === 2 ? '待审核' : ''}}

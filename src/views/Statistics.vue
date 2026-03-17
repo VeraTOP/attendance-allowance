@@ -19,14 +19,14 @@
       div(class="w-12 h-1.5 bg-slate-200/80 rounded-full hover:bg-slate-300 transition-colors")
     AttendanceStatisticsDetail(v-if="active === 1")
     AllowanceStatisticsDetail(v-else-if="active === 2")
-    //- AttendanceStatisticsDetail(v-if="active === 1" :data="{singinNum: singinData?.length || 0, unSigninMum: unSigninData?.length || 0, slectSinginData, selectedDate}")
+    //- AttendanceStatisticsDetail(v-if="active === 1" :data="{singinNum: singinData?.length || 0, unSigninNum: unSigninData?.length || 0, slectSinginData, selectedDate}")
     //- AllowanceStatisticsDetail(v-else-if="active === 2" :date="{allowanceDays: Object.keys(allowanceGroupByDate)?.length, slectSinginData, selectedDate, allowanceTotal, }")
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { dateUtil } from '@/assets/scripts/date-util'
-import { isEmpty, groupBy, sumBy, cloneDeep } from 'lodash'
+import { isEmpty, groupBy, sumBy, cloneDeep, sortBy } from 'lodash'
 import { Allowance } from '@/api'
 import AttendanceStatisticsDetail from '@/components/AttendanceStatisticsDetail.vue'
 import AllowanceStatisticsDetail from '@/components/AllowanceStatisticsDetail.vue'
@@ -41,8 +41,10 @@ const { t, locale } = useI18n()
 // 统计页面逻辑
 const calendarRef: any = ref(null)
 const active = ref(1)
-const singinData :any = ref([]);
-const unSigninData :any = ref([]); // 补录
+const attendanceConfirmList: any = ref([]);
+const confirmStatus = ref()
+const singinData: any = ref([]);
+const unSigninData: any = ref([]); // 补录
 
 const currentDate = computed(() => {
   return dateUtil.formatDate(new Date(), 'YYYY-MM');
@@ -98,7 +100,7 @@ const getAttendanceList = async (date: string = currentDate.value) => {
   slectSinginData.value = selectedDate.value ? list.value.find((item: any) => item.attendanceDate === selectedDate.value?.info) || {} : {}
   setAttendanceForDay({
     singinNum: singinData.value?.length || 0,
-    unSigninMum: unSigninData.value?.length || 0,
+    unSigninNum: unSigninData.value?.length || 0,
     slectSinginData: slectSinginData.value || {},
     selectedDate: selectedDate.value?.info,
   })
@@ -113,6 +115,7 @@ const onChangeDate = ({ date }: any) => {
   }
   if (active.value === 1) {
     getAttendanceList(formatDate)
+    getConfirmSummary(formatDate)
   } else if (active.value === 2) {
     getAllowanceList(formatDate)
   }
@@ -126,13 +129,22 @@ const onSelectDate = (value : any) => {
   }
   if (active.value === 1) {
     slectSinginData.value = list.value.find((item: any) => item.attendanceDate === formatDate) || {}
+    console.log('slectSinginData.value', slectSinginData.value?.id, attendanceConfirmList.value)
+    const { back, reason } = attendanceConfirmList.value.find((item: any) => item.attendanceId === slectSinginData.value?.id) || {}
     setAttendanceForDay({
       singinNum: singinData.value?.length || 0,
-      unSigninMum: unSigninData.value?.length || 0,
+      unSigninNum: unSigninData.value?.length || 0,
       slectSinginData: slectSinginData.value || {},
       selectedDate: selectedDate.value?.info,
+      roundTrip: {
+        back,
+        reason,
+      },
+      confirmStatus: confirmStatus.value
     })
   } else if (active.value === 2) {
+    // selectedDate
+    console.log('formatDate', formatDate)
     slectSinginData.value = allowanceGroupByDate.value[formatDate] || {}
     setAllowanceForDay({
       allowanceDays: Object.keys(allowanceGroupByDate.value)?.length || 0,
@@ -142,7 +154,44 @@ const onSelectDate = (value : any) => {
     })
   }
 }
+const getLatestMonthAllowance = async () => {
+  const res = await Allowance.getLatestMonthAllowance()
+  console.log('getLatestMonthAllowance', res)
+  // if (res.code === 0) {
+    // selectedDate.value = {
+    //   info: res.data?.month || '',
+    //   data: new Date(res.data?.month || ''),
+    // }
+    // getAllowanceList(res.data?.month || '')
+  // }
+  allowanceList.value = res.data || []
+  allowanceGroupByDate.value = groupBy(allowanceList.value, 'date')
+  allowanceTotal.value = sumBy(allowanceList.value, (item: any) => item.amount)
+  singinData.value = allowanceList.value.map((item: any) => item.date)
+  // singinData.value = allowanceList.value.map((item: any) => item.date)
+  unSigninData.value = []
+  // 获取最大日期值
+  const dates = sortBy(Object.keys(allowanceGroupByDate.value))
+  // console.log('dates', dates)
+  const lastDate = dates.length > 0 ? dates[dates.length - 1] : ''
+  selectedDate.value = {
+    info: lastDate,
+    data: new Date(lastDate),
+  }
+  // unSigninData.value = allowanceList.value.filter((item: any) => item.status === '2').map((item: any) => item.attendanceDate)
+  slectSinginData.value = allowanceGroupByDate.value[selectedDate.value?.info] || {}
+  console.log('Allowance singinData.value', slectSinginData.value)
+  console.log('Allowance slectSinginData.value', slectSinginData.value)
+  console.log('Allowance allowanceGroupByDate.value', allowanceGroupByDate.value)
+  // console.log('Allowance selectedDate.value', llowanceGroupByDate.value.[])
 
+  setAllowanceForDay({
+    allowanceDays: Object.keys(allowanceGroupByDate.value)?.length || 0,
+    allowanceTotal: allowanceTotal.value || 0,
+    slectSinginData: slectSinginData.value || {},
+    selectedDate: selectedDate.value?.info || '',
+  })
+}
 const getAllowanceList = async (date: string = currentDate.value) => {
   const params = {
     allowanceMonth:date
@@ -168,20 +217,39 @@ const getAllowanceList = async (date: string = currentDate.value) => {
     selectedDate: selectedDate.value?.info || '',
   })
 }
+const getConfirmSummary = async (date: string = currentDate.value) => {
+  try {
+    const params = {
+      month: date
+    }
 
+    const res = await Allowance.getAttendanceConfirmSummary(params)
+    console.log('获取确认考勤往返信息摘要成功:', res)
+
+    // 处理返回数据，更新组件状态
+    if (res.code === 0) {
+      console.log('getConfirmSummary res.data', res.data)
+      attendanceConfirmList.value = res.data?.attendanceConfirmList || []
+      confirmStatus.value = res.data?.confirmStatus
+      // isRoundTrip.value = res.data?.back || '0'
+      // reason.value = res.data?.reason || ''
+    }
+  } catch (error) {
+    console.error('获取确认考勤往返信息摘要失败:', error)
+  }
+}
 watch(() => active.value, (newVal : number) => {
   selectedDate.value = {
     info: dateUtil.formatDate(new Date(), 'YYYY-MM-DD'),
     data: new Date()
   }
-  // if (calendarRef.value) {
-  //   // calendarRef.value.reset(new Date())
-  // }
-
+  singinData.value = []
   if (newVal === 1) {
     getAttendanceList()
+    getConfirmSummary()
   } else if (newVal === 2) {
-    getAllowanceList()
+    // getAllowanceList()
+    getLatestMonthAllowance()
   }
   // getAttendanceList(newVal)
   // getAllowanceList(newVal)

@@ -131,10 +131,10 @@ export class ApiService {
 
       // 如果不是FormData类型，设置Content-Type为application/json
       // console.log('data instanceof FormData', data instanceof FormData)
-      // if (!(data instanceof FormData)) {
-      //   (config.headers as Record<string, string>)['Content-Type'] = 'application/json'
-      // }
-      config.headers['Content-Type'] = 'multipart/form-data'
+      if (!(data instanceof FormData)) {
+        (config.headers as Record<string, string>)['Content-Type'] = 'application/json'
+      }
+      // config.headers['Content-Type'] = 'multipart/form-data'
       // if (!(data instanceof FormData)) {
       //   (config.headers as Record<string, string>)['Content-Type'] = 'application/json'
       // }
