@@ -5,7 +5,7 @@ div
       div(class="absolute inset-0 bg-gradient-to-b from-sky-200/50 via-blue-50/30 to-white dark:from-sky-300/90 dark:to-[var(-van-blue)] pointer-events-none")
       UserInfoMain
     TotalDataMain(class="mt-[-2rem]" :data="{attendanceLen, confirmDataLen}")
-    CommonFunction(class="mt-2")
+    CommonFunction(class="mt-2" :data=" { confirmData }")
 </template>
 
 <script setup lang="ts">
@@ -34,12 +34,14 @@ const getAttendanceList = async () => {
   console.log('getAttendanceList', res)
   attendanceLen.value = res.data?.records?.length || 0
 }
+const confirmData = ref([])
 const getConfirmData = async () => {
   const params = {
   }
   const res = await Allowance.getListConfirmable(params)
   console.log('getConfirmData', res)
   confirmDataLen.value = res.data?.filter((item: any) => !item.confirm).length || 0
+  confirmData.value = res.data
 }
 onMounted(() => {
   getAttendanceList()

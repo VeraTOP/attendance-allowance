@@ -75,5 +75,10 @@
   "roundTripReason": "Round Trip Reason",
   "revokeAttendance": "Cancel Confirmation",
   "markRoundTrip": "Mark Round Trip",
-  "roundTrip": "Round Trip"
+  "roundTrip": "Round Trip",
+  "noConfirmData": "No Attendance Data to Confirm",
+  "commonFunctions": "Common Functions",
+  "myAttendanceConfirmation": "My Attendance Confirmation",
+  "attendanceDetails": "Attendance Details",
+  "allowanceDetails": "Allowance Details"
 }

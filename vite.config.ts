@@ -11,6 +11,7 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
+    port: 6173,
     watch: {
       // 确保所有文件都被监听
       usePolling: true,

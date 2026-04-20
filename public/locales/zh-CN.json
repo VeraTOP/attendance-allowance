@@ -75,5 +75,10 @@
   "roundTripReason": "填写往返事由",
   "revokeAttendance": "取消确认",
   "markRoundTrip": "标记往返",
-  "roundTrip": "往返"
+  "roundTrip": "往返",
+  "noConfirmData": "暂无考勤确认数据",
+  "commonFunctions": "常用功能",
+  "myAttendanceConfirmation": "我的考勤确认",
+  "attendanceDetails": "考勤明细",
+  "allowanceDetails": "补助明细"
 }

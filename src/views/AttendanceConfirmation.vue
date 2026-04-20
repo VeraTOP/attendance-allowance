@@ -1,6 +1,6 @@
 <template lang="pug">
 #AttendanceConfirmation(class="px-4")
-  //- p {{selectedDate}}
+  //- p ---{{confirmData}}
   div(class="flex justify-center py-6")
     van-button(type="primary" plain round class="w-56" size="large" )
       div(class="flex items-center gap-2")
