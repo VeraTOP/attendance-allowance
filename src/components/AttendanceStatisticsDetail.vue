@@ -23,22 +23,40 @@
             span(class="text-xs font-medium text-slate-400 ml-1.5") {{t('allowanceTimesUnit')}}
     div(class="mt-6")
       //- p  {{currentDay}} -- {{data.selectedDate}}
-      div(class="flex items-center justify-between mb-5")
+      div(class="flex items-center justify-between mb-4")
         h3(class="text-lg font-bold text-slate-800 flex items-center gap-3") {{dateUtil.formatDate(data.selectedDate, locale === 'zh-CN' ? 'MM月DD日' : 'DD/MM')}}
           span(v-if="currentDay === data.selectedDate" class="text-[10px] font-bold px-2.5 rounded-full bg-[--van-blue-lightest] text-[--van-blue] border border-[--van-blue-lighter] shadow-sm") {{t('today')}}
         //- p(class="text-[13px] text-[--van-blue] tracking-tight" @click="handleClick") 查看全部
           //- van-icon(name="arrow" class="ml-1")
+        //- div(class="text-right" v-if="!(!isRoundTrip && isRoundTrip !== 0)")
+          van-icon(v-if="data.confirmStatus !== 1" name="edit" class="ml-2" size="18" @click="showReasonPopup = true")
       //- 是否往返及事由
+      //- p {{data.confirmStatus}}
+      //- p isRoundTrip {{typeof isRoundTrip}} {{isRoundTrip === null}}
+      //- p reason{{reason}}
       div(class="mb-4" v-if="!isEmpty(data?.slectSinginData)")
-        div(class="flex items-center justify-between mb-3")
-          span(class="text-sm font-semibold text-slate-900") {{t('whetherRoundTrip')}}
-          van-switch(v-if="data.confirmStatus !== 1" v-model="isRoundTrip" @change="handleRoundTripChange" size="24" :active-value="1" :inactive-value="0")
-          p(v-else="isRoundTrip" class="text-slate-900") {{isRoundTrip ? '是' : '否'}}
-        div(class="flex items-center justify-between mb-3" v-if="isRoundTrip")
-          span(class="text-sm font-semibold text-slate-900") {{t('reason')}}
-          p( class="text-slate-900")
-            | {{reason}}
-            van-icon(v-if="data.confirmStatus !== 1" name="edit" class="ml-2" size="16" @click="showReasonPopup = true")
+        div(class="flex items-center justify-between mb-3" v-if="!isRoundTrip && isRoundTrip !== 0")
+          span(class="text-sm font-semibold text-slate-900" )
+            span(class="text-red-500 mr-1") *
+            | {{t('whetherRoundTripAndReason')}}
+          van-icon(v-if="data.confirmStatus !== 1" name="edit" class="ml-2" size="18" @click="showReasonPopup = true")
+          //- van-switch(v-if="data.confirmStatus !== 1" v-model="isRoundTrip" size="24" :active-value="1" :inactive-value="0")
+          //- p(v-else="isRoundTrip" class="text-slate-900") {{isRoundTrip ? '是' : '否'}}
+        template(v-else)
+          div(v-if="data.confirmStatus !== 1" class="text-right text-primary mb-1" @click="showReasonPopup = true")
+            van-icon( name="edit" class="ml-2" size="18" )
+            span {{t('editRoundTripInfo')}}
+          div(class="flex items-center justify-between mb-3"  )
+            span(class="text-sm font-semibold text-slate-900")
+              | {{t('whetherRoundTrip')}}
+            p(class="text-slate-900 text-right")
+              | {{isRoundTrip ? '是' : '否'}}
+          div(class="flex items-center justify-between mb-3")
+            span(class="text-sm font-semibold text-slate-900")
+              | {{t('reason')}}
+            p(class="text-slate-900 text-right")
+              | {{reason}}
+            //- van-icon(v-if="data.confirmStatus !== 1" name="edit" class="ml-2" size="16" @click="showReasonPopup = true")
       div(class="space-y-4")
         div(class="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-soft")
           div(:class="['absolute','left-0','top-0','bottom-0','w-1.5', data.slectSinginData?.attendanceStartDatetime ? 'bg-primary' : 'bg-slate-200']")
@@ -80,18 +98,29 @@
     van-nav-bar(:title="t('roundTripReason')"  @click="showReasonPopup = false; isRoundTrip = data?.roundTrip?.back || 0")
       template(#right)
         van-icon(name="cross" size="18" color="#999")
-    van-cell-group
-      //- div(class="text-lg font-bold text-slate-800 mb-4") {{t('reason')}}
-      //- van-cell-group
-      van-field(
-        v-model="reason"
-        type="textarea"
-        :rows="4"
-        :placeholder="t('pleaseEnterReason')"
-        maxlength="200"
-        show-word-limit
-        required
-      )
+    van-form(ref="formRef" )
+      van-cell-group
+        //- div(class="text-lg font-bold text-slate-800 mb-4") {{t('reason')}}
+        //- van-cell-group
+        van-field(
+          :label="t('whetherRoundTrip')"
+          name="switch"
+          required
+          input-align="right"
+          )
+          template(#input)
+            van-switch(v-model="isRoundTrip" size="24" :active-value="1" :inactive-value="0")
+        van-field(
+          :label="t('reason')"
+          v-model="reason"
+          type="textarea"
+          :rows="4"
+          :placeholder="t('pleaseEnterReason')"
+          maxlength="200"
+          show-word-limit
+          required
+          input-align="right"
+        )
     div(class="p-5 w-full")
       //- van-button(:text="t('cancel')" @click="showReasonPopup = false" class="flex-1" color="#999")
       van-button(:text="t('confirm')" @click="saveReason" class="" type="primary" :loading="isSaving" block round :disabled="isEmpty(reason)")
@@ -104,6 +133,7 @@ import { dateUtil } from '@/assets/scripts/date-util'
 import { useStatisticsStore } from '@/stores/statistics'
 import { useI18n } from '@/i18n'
 import { Allowance } from '@/api/index'
+import { showToast } from 'vant'
 const { t, locale } = useI18n()
 const statisticsStore: any = useStatisticsStore()
 
@@ -120,7 +150,7 @@ watch(() => data.value.roundTrip, (newVal) => {
   }
 })
 // 是否往返开关状态 0-无，1-返回
-const isRoundTrip = ref(0)
+const isRoundTrip = ref()
 // 事由弹窗显示状态
 const showReasonPopup = ref(false)
 // 事由内容
@@ -129,16 +159,16 @@ const reason = ref('')
 const isSaving = ref(false)
 
 // 处理开关变化
-const handleRoundTripChange = (value: boolean) => {
-  if (value) {
-    // 打开开关，显示弹窗
-    showReasonPopup.value = true
-  } else {
-    // 关闭开关，清空事由并保存
-    reason.value = ''
-    saveReason()
-  }
-}
+// const handleRoundTripChange = (value: boolean) => {
+//   if (value) {
+//     // 打开开关，显示弹窗
+//     showReasonPopup.value = true
+//   } else {
+//     // 关闭开关，清空事由并保存
+//     reason.value = ''
+//     saveReason()
+//   }
+// }
 
 // 保存事由
 const saveReason = async () => {
@@ -149,17 +179,21 @@ const saveReason = async () => {
   try {
     const params = {
       attendanceId: attendanceId,
-      back: isRoundTrip.value,
+      back: isRoundTrip.value || 0,
       reason: reason.value
     }
 
     const res = await Allowance.confirmAttendanceItem(params)
+    isRoundTrip.value = params.back
     console.log('保存往返信息成功:', res)
-
     // 关闭弹窗
     showReasonPopup.value = false
-  } catch (error) {
+  } catch (error: any) {
     console.error('保存往返信息失败:', error)
+     // ElMessage.error(res.msg || '保存往返信息失败')
+    showToast({
+      message: error.msg || '保存往返信息失败',
+    })
   } finally {
     isSaving.value = false
   }

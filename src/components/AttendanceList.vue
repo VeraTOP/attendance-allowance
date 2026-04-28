@@ -8,9 +8,10 @@
     div(class="")
     van-row(class="" :gutter="24")
       van-col(:span="6")
-        div(v-if="item.status == '1'" class="flex items-center justify-center rounded-2xl bg-green-50 text-green-600 w-12 h-12 shadow-sm border border-green-100/50")
+        //- p {{typeof item.status}}
+        div(v-if="item.status == 1" class="flex items-center justify-center rounded-2xl bg-green-50 text-green-600 w-12 h-12 shadow-sm border border-green-100/50")
           van-icon( name="passed" size="24")
-        div(v-else-if="item.status == '2'" class="flex items-center justify-center rounded-2xl bg-amber-50 text-amber-600 w-12 h-12 shadow-sm border border-amber-100/50")
+        div(v-else-if="item.status == 2" class="flex items-center justify-center rounded-2xl bg-amber-50 text-amber-600 w-12 h-12 shadow-sm border border-amber-100/50")
           van-icon(name="underway-o" size="24")
       van-col(:span="18")
         p(class="text-[17px] font-bold text-slate-800 tracking-tight") {{t('attendanceType.' + item.status)}}

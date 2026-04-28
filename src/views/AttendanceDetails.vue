@@ -38,7 +38,7 @@ const { t, locale } = useI18n()
 const containerRef = ref(null)
 
 const currentDate = computed(() => {
-  // return '2025-12'
+  // return '2026-02'
   return dateUtil.formatDate(new Date(), 'YYYY-MM')
   // return {
   //   date: dateUtil.formatDate(new Date(), 'YYYY-MM'),

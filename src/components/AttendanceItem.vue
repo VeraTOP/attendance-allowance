@@ -11,7 +11,7 @@
       div()
         span(class="mr-2 text-slate-900 font-bold text-[15px]")
           span(v-if="item.attendanceDate") {{dateUtil.format(item.attendanceDate, (locale === 'zh-CN' ? 'MM月DD日' : 'DD/MM'))}}
-        span(:class="[item.status === '1' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-500/20' : 'bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-100 dark:border-orange-500/20', 'px-1', 'py-0.5', 'text-[11px]', 'font-bold', 'border', 'rounded-sm']") {{t('attendanceType.' + item.status)}}
+        span(:class="[item.status === 1 ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-500/20' : 'bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-100 dark:border-orange-500/20', 'px-1', 'py-0.5', 'text-[11px]', 'font-bold', 'border', 'rounded-sm']") {{t('attendanceType.' + item.status)}}
       div(class="text-slate-500" v-if="item.attendanceStartDatetime && item.attendanceEndDatetime")
         van-icon(name='underway-o' size="14")
         span(class="text-xs font-medium ml-1" ) {{t('workDuration')}} {{dateUtil.calculateDuration(item.attendanceStartDatetime, item.attendanceEndDatetime, {unit: 'hours'})}}h

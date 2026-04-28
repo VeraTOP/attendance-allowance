@@ -127,6 +127,18 @@ const getAllowanceList = async (date: string) => {
 }
 const loading = ref(false)
 const confirm = async () => {
+  console.log('confirm', confirmData.value)
+  // attendanceList
+  if (attendanceConfirmList.value.length < attendanceList.value.length) {
+    const arr = attendanceList.value.filter((item: any) => !attendanceConfirmList.value.find((confirmItem: any) => confirmItem.attendanceDate === item.attendanceDate)).map((item: any) => item.attendanceDate)
+    console.log('arr', arr)
+    showToast({
+      message: t('confirmAttendanceEmpty', {
+        date: arr.join('、')
+      }),
+    })
+    return
+  }
   const params = {
     attendanceMonth: confirmData.value?.currentMonth,
     confirmStatus: confirmData.value?.confirm ? 0 : 1

@@ -2,8 +2,8 @@
 #Home(class="relative")
   div(class="absolute top-0 w-full h-[36vh] bg-primary-gradient rounded-b-[2.5rem] z-[-1]")
   UserInfo
-  TotalData(:data="{days: list.length, num: allowanceList.length }")
-  ToBeDone(:data='confirmData')
+  TotalData(:data="{days: list.length, num: allowanceList.length }" :onlyAttendance="onlyAttendance")
+  ToBeDone(v-if="!onlyAttendance" :data='confirmData')
   AttendanceList(:data="list")
 </template>
 
@@ -17,14 +17,16 @@ import AttendanceList from '@/components/AttendanceList.vue'
 import { isEmpty } from 'lodash'
 import { dateUtil } from '@/assets/scripts/date-util'
 import { Allowance } from '@/api'
-
+import { useUserStore } from '@/stores/user'
 
 const { t, locale, changeLocale } = useI18n()
 
+const userStore: any = useUserStore()
+const onlyAttendance = computed(() => userStore?.userInfo?.applyPersonType === null)
 const list = ref([])
 const confirmData = ref({})
 const currentDate = computed(() => dateUtil.format(new Date(), 'YYYY-MM'))
-// const currentDate = ref('2025-12')
+// const currentDate = ref('2026-02')
 
 const getAttendanceList = async () => {
   const params = {

@@ -7,7 +7,7 @@ import { setupI18n, initI18n } from './i18n'
 // 导入Vant组件
 import { ConfigProvider,Button, Cell, CellGroup, Popup, Radio, RadioGroup, Icon, Tabbar,TabbarItem, NavBar, Image as VanImage,
   Grid, GridItem, Col, Row, Progress, Empty, Sticky, Tab, Tabs, Calendar, Checkbox, DatePicker,
-  DropdownMenu, DropdownItem, Switch, Field
+  DropdownMenu, DropdownItem, Switch, Field, Form
  } from 'vant'
 
 const app = createApp(App)
@@ -43,6 +43,7 @@ app.use(ConfigProvider)
    .use(DropdownItem)
    .use(Switch)
    .use(Field)
+   .use(Form)
 // 初始化i18n，生产环境从public/locales加载语言文件
 initI18n().then(() => {
   app.use(pinia).use(router).mount('#app')

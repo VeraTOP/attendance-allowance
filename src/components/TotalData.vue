@@ -2,7 +2,7 @@
 #TotalData(class="px-5 mt-8")
   //- p 总数据
   van-row(gutter="24")
-    van-col(class="" span="12")
+    van-col(class="" :span="onlyAttendance ? 24 : 12")
       div(class="bg-white rounded-3xl overflow-hidden p-5 relative")
         div(class="absolute top-0 right-0 w-24 h-24 bg-blue-500/5 rounded-full -translate-y-1/2 translate-x-1/2 transition-transform group-hover:scale-110 duration-500")
         div(class="w-11 h-11 rounded-2xl flex items-center justify-center bg-[var(--van-primary-color-lightest)]")
@@ -17,7 +17,7 @@
             van-progress(:percentage="progressNum" color="linear-gradient(to right, #38bdf8, #0284c7)" :show-pivot="false" stroke-width="8")
           //- p(class="text-lg font-bold text-[#303133]") {{ totalDays }}
           //- p(class="text-xs text-slate-400 mt-1") 统计至 {{ currentDate }}
-    van-col(class="" span="12")
+    van-col(v-if="!onlyAttendance" class="" span="12")
       div(class="bg-white rounded-3xl overflow-hidden p-5 relative")
         div(class="absolute top-0 right-0 w-24 h-24 bg-sky-500/5 rounded-full -translate-y-1/2 translate-x-1/2 transition-transform group-hover:scale-110 duration-500")
         div(class="w-11 h-11 rounded-2xl flex items-center justify-center bg-[var(--van-blue-lightest)]")
@@ -46,8 +46,15 @@ const props = defineProps({
   data: {
     type: Object,
     default: () => ({})
+  },
+  onlyAttendance: {
+    type: Boolean,
+    default: false
   }
 })
+
+// const userInfo: any = computed(() => userStore?.userInfo)
+
 const days = computed(() => props.data.days)
 const number = computed(() => props.data.num)
 // const updateDate = ref('2025-12-27 10:30:00')

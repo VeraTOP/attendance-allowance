@@ -20,7 +20,7 @@ const { t } = useI18n()
 const userStore = useUserStore()
 
 const token = computed(() => userStore.token)
-const userInfo = computed(() => userStore.userInfo)
+const userInfo: any = computed(() => userStore.userInfo)
 // 响应式变量存储当前主题
 const currentTheme = ref('light')
 const active = ref(0)
@@ -65,9 +65,27 @@ watch(() => route, (val: any) => {
 }, {
   deep: true,
 })
+
+// 监听用户信息变化
+watch(() => userInfo.value, () => {
+  init(route)
+}, {
+  deep: true,
+})
+
 const init = (val: any) => {
   active.value = tabList.value.findIndex(item => item.link === val.path)
-  isTabbar.value = val?.meta?.isTabbar || false
+
+  // 检查applyPersonType
+  const applyPersonType = userInfo.value?.applyPersonType
+  if (applyPersonType === null) {
+    // applyPersonType为null，隐藏tabbar
+    isTabbar.value = false
+  } else {
+    // applyPersonType不为null，正常显示tabbar
+    isTabbar.value = val?.meta?.isTabbar || false
+  }
+
   isNavBar.value = val?.meta?.isNavbar
   if (val?.meta?.key) title.value = document.title = t(val?.meta?.key)
 }
@@ -117,6 +135,7 @@ const getToken = () => {
 const getUser = async () => {
   const res = await Allowance.getUserInfo()
   // console.log('getUser', res)
+  // res.data.applyPersonType = null
   if (res.data) userStore.setUserInfo(res.data)
 }
 onMounted(() => {

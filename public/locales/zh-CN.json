@@ -80,5 +80,8 @@
   "commonFunctions": "常用功能",
   "myAttendanceConfirmation": "我的考勤确认",
   "attendanceDetails": "考勤明细",
-  "allowanceDetails": "补助明细"
+  "allowanceDetails": "补助明细",
+  "whetherRoundTripAndReason": "是否往返及事由",
+  "editRoundTripInfo": "编辑往返信息",
+  "confirmAttendanceEmpty": "请标记考勤{date}的往返事由"
 }

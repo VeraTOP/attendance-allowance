@@ -80,5 +80,8 @@
   "commonFunctions": "Common Functions",
   "myAttendanceConfirmation": "My Attendance Confirmation",
   "attendanceDetails": "Attendance Details",
-  "allowanceDetails": "Allowance Details"
+  "allowanceDetails": "Allowance Details",
+  "whetherRoundTripAndReason": "Whether Round Trip and Reason",
+  "editRoundTripInfo": "Edit Round Trip Info",
+  "confirmAttendanceEmpty": "Please mark round trip reason for {date}"
 }
